@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Walid.ai : le logo, la grille de onze carres en encre bleue, le centre noir. -->
+  <rect width="1024" height="1024" fill="#FBFAF7"/>
+  <g fill="#2337B8">
+    <rect x="276" y="276" width="144" height="144"/>
+    <rect x="440" y="276" width="144" height="144"/>
+    <rect x="604" y="276" width="144" height="144"/>
+    <rect x="112" y="440" width="144" height="144"/>
+    <rect x="276" y="440" width="144" height="144"/>
+    <rect x="604" y="440" width="144" height="144"/>
+    <rect x="768" y="440" width="144" height="144"/>
+    <rect x="276" y="604" width="144" height="144"/>
+    <rect x="440" y="604" width="144" height="144"/>
+    <rect x="604" y="604" width="144" height="144"/>
+  </g>
+  <rect x="440" y="440" width="144" height="144" fill="#1A1A18"/>
+</svg>

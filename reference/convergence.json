@@ -1,0 +1,202 @@
+[
+ {
+  "foule": "eau",
+  "arrives": 0.99,
+  "temps_median_min": 62.0,
+  "temps_90_min": 90.075,
+  "contact_min_par_personne": 0.5975,
+  "part_jamais_au_contact": 0.98,
+  "groupes_max": 35,
+  "rues_approche": 14
+ },
+ {
+  "foule": "eau",
+  "arrives": 0.985,
+  "temps_median_min": 62.0,
+  "temps_90_min": 85.25,
+  "contact_min_par_personne": 0.6474999999999999,
+  "part_jamais_au_contact": 0.975,
+  "groupes_max": 37,
+  "rues_approche": 17
+ },
+ {
+  "foule": "eau",
+  "arrives": 0.975,
+  "temps_median_min": 61.5,
+  "temps_90_min": 86.0,
+  "contact_min_par_personne": 0.385,
+  "part_jamais_au_contact": 0.985,
+  "groupes_max": 34,
+  "rues_approche": 17
+ },
+ {
+  "foule": "eau",
+  "arrives": 0.995,
+  "temps_median_min": 61.25,
+  "temps_90_min": 85.4,
+  "contact_min_par_personne": 0.45125,
+  "part_jamais_au_contact": 0.975,
+  "groupes_max": 34,
+  "rues_approche": 17
+ },
+ {
+  "foule": "eau",
+  "arrives": 0.965,
+  "temps_median_min": 61.0,
+  "temps_90_min": 86.5,
+  "contact_min_par_personne": 2.05875,
+  "part_jamais_au_contact": 0.96,
+  "groupes_max": 38,
+  "rues_approche": 18
+ },
+ {
+  "foule": "eau",
+  "arrives": 0.99,
+  "temps_median_min": 63.875,
+  "temps_90_min": 86.825,
+  "contact_min_par_personne": 0.3675,
+  "part_jamais_au_contact": 0.985,
+  "groupes_max": 38,
+  "rues_approche": 16
+ },
+ {
+  "foule": "eau",
+  "arrives": 0.98,
+  "temps_median_min": 62.375,
+  "temps_90_min": 85.25,
+  "contact_min_par_personne": 0.5075,
+  "part_jamais_au_contact": 0.99,
+  "groupes_max": 37,
+  "rues_approche": 15
+ },
+ {
+  "foule": "eau",
+  "arrives": 0.995,
+  "temps_median_min": 61.5,
+  "temps_90_min": 84.5,
+  "contact_min_par_personne": 0.71125,
+  "part_jamais_au_contact": 0.99,
+  "groupes_max": 38,
+  "rues_approche": 14
+ },
+ {
+  "foule": "eau",
+  "arrives": 1.0,
+  "temps_median_min": 62.5,
+  "temps_90_min": 86.75,
+  "contact_min_par_personne": 0.02,
+  "part_jamais_au_contact": 0.995,
+  "groupes_max": 35,
+  "rues_approche": 13
+ },
+ {
+  "foule": "eau",
+  "arrives": 0.985,
+  "temps_median_min": 61.5,
+  "temps_90_min": 88.35,
+  "contact_min_par_personne": 0.28625,
+  "part_jamais_au_contact": 0.99,
+  "groupes_max": 35,
+  "rues_approche": 15
+ },
+ {
+  "foule": "cortege",
+  "arrives": 0.975,
+  "temps_median_min": 74.75,
+  "temps_90_min": 115.5,
+  "contact_min_par_personne": 3.28125,
+  "part_jamais_au_contact": 0.705,
+  "groupes_max": 5,
+  "rues_approche": 2
+ },
+ {
+  "foule": "cortege",
+  "arrives": 0.995,
+  "temps_median_min": 70.0,
+  "temps_90_min": 79.35000000000001,
+  "contact_min_par_personne": 0.31625,
+  "part_jamais_au_contact": 0.995,
+  "groupes_max": 5,
+  "rues_approche": 1
+ },
+ {
+  "foule": "cortege",
+  "arrives": 0.995,
+  "temps_median_min": 70.0,
+  "temps_90_min": 79.30000000000001,
+  "contact_min_par_personne": 0.3425,
+  "part_jamais_au_contact": 0.99,
+  "groupes_max": 4,
+  "rues_approche": 1
+ },
+ {
+  "foule": "cortege",
+  "arrives": 1.0,
+  "temps_median_min": 70.875,
+  "temps_90_min": 80.025,
+  "contact_min_par_personne": 0.0,
+  "part_jamais_au_contact": 1.0,
+  "groupes_max": 4,
+  "rues_approche": 1
+ },
+ {
+  "foule": "cortege",
+  "arrives": 0.98,
+  "temps_median_min": 76.75,
+  "temps_90_min": 82.75,
+  "contact_min_par_personne": 1.655,
+  "part_jamais_au_contact": 0.9,
+  "groupes_max": 5,
+  "rues_approche": 1
+ },
+ {
+  "foule": "cortege",
+  "arrives": 0.995,
+  "temps_median_min": 70.25,
+  "temps_90_min": 79.5,
+  "contact_min_par_personne": 0.33625,
+  "part_jamais_au_contact": 0.99,
+  "groupes_max": 5,
+  "rues_approche": 1
+ },
+ {
+  "foule": "cortege",
+  "arrives": 1.0,
+  "temps_median_min": 71.5,
+  "temps_90_min": 80.75,
+  "contact_min_par_personne": 0.3075,
+  "part_jamais_au_contact": 0.985,
+  "groupes_max": 3,
+  "rues_approche": 1
+ },
+ {
+  "foule": "cortege",
+  "arrives": 1.0,
+  "temps_median_min": 70.125,
+  "temps_90_min": 79.775,
+  "contact_min_par_personne": 0.0,
+  "part_jamais_au_contact": 1.0,
+  "groupes_max": 3,
+  "rues_approche": 1
+ },
+ {
+  "foule": "cortege",
+  "arrives": 1.0,
+  "temps_median_min": 71.125,
+  "temps_90_min": 80.5,
+  "contact_min_par_personne": 0.0,
+  "part_jamais_au_contact": 1.0,
+  "groupes_max": 3,
+  "rues_approche": 1
+ },
+ {
+  "foule": "cortege",
+  "arrives": 0.995,
+  "temps_median_min": 74.0,
+  "temps_90_min": 86.30000000000003,
+  "contact_min_par_personne": 0.7675,
+  "part_jamais_au_contact": 0.545,
+  "groupes_max": 5,
+  "rues_approche": 1
+ }
+]
