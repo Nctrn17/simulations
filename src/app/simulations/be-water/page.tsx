@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Nav, Pied } from "@/components/Chrome";
 import { SimBeWater } from "@/components/SimBeWater";
 
@@ -57,7 +56,7 @@ export default function PageBeWater() {
           </p>
           <p>
             L&apos;autre simulation, à l&apos;échelle de tout Paris :{" "}
-            <Link href="/simulations/convergence">par toutes les portes ou par une seule ?</Link>
+            <a href="/simulations/convergence">par toutes les portes ou par une seule ?</a>
           </p>
         </section>
 

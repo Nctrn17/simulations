@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Nav, Pied } from "@/components/Chrome";
 import { SimConvergence } from "@/components/SimConvergence";
 
@@ -57,7 +56,7 @@ export default function PageConvergence() {
           </p>
           <p>
             L&apos;autre simulation, dans le centre de Paris :{" "}
-            <Link href="/simulations/be-water">un cortège ou vingt groupes ?</Link>
+            <a href="/simulations/be-water">un cortège ou vingt groupes ?</a>
           </p>
         </section>
 

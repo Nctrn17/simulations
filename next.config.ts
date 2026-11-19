@@ -4,6 +4,9 @@ import type { NextConfig } from "next";
 // qui commence par /simulations. Les pages et les fichiers publics gardent donc
 // leur adresse (/simulations/...), et seuls les fichiers fabriqués par Next
 // passent sous /simulations-static pour ne pas se mélanger à ceux du site.
+//
+// Les liens entre les pages sont des balises <a>, pas des <Link> : servi à travers
+// walidai.fr, le préchargement de <Link> tombe en 404.
 const nextConfig: NextConfig = {
   assetPrefix: "/simulations-static",
   async redirects() {

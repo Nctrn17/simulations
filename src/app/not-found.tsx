@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Nav, Pied, SITE } from "@/components/Chrome";
 
 export default function NotFound() {
@@ -13,9 +12,9 @@ export default function NotFound() {
             Le lien est peut-être ancien, ou la page a changé d&apos;adresse.
           </p>
           <p>
-            <Link href="/simulations" className="lien-fort">
+            <a href="/simulations" className="lien-fort">
               Les simulations
-            </Link>{" "}
+            </a>{" "}
             ·{" "}
             <a href={`${SITE}/`} className="souligne">
               Retour à l&apos;accueil

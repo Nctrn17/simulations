@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Nav, Pied } from "@/components/Chrome";
 
 const DESCRIPTION =
@@ -53,7 +52,7 @@ export default function PageSimulations() {
         {SIMULATIONS.map((s) => (
           <section className="manif-bloc" key={s.href}>
             <h2>
-              <Link href={s.href}>{s.titre}</Link>
+              <a href={s.href}>{s.titre}</a>
             </h2>
             <p>
               <strong>{s.question}</strong> {s.texte}
