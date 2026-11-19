@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
 import "./globals.css";
 
@@ -74,7 +73,6 @@ gtag('config', '${MESURE}', {
   allow_ad_personalization_signals: false
 });`}
         </Script>
-        <Analytics />
       </body>
     </html>
   );
