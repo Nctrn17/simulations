@@ -1,0 +1,43 @@
+{
+ "_lisez-moi": "Les villes de be water hors Paris. Pour chaque ville : deux lieux que la police tient sans bouger (comme la Concorde et l'Élysée à Paris) et trois places où elle peut encercler, dans l'ordre du parcours déclaré (comme Madeleine, Opéra, Palais-Royal). Coordonnées en degrés (OpenStreetMap, Nominatim). Carte fabriquée par node scripts/fabriquer-villes.mjs.",
+ "lyon": {
+  "nom": "Lyon",
+  "tenus": [["prefecture", "Préfecture", 45.76044, 4.84332], ["hotel_de_ville", "Hôtel de ville", 45.76768, 4.83584]],
+  "nasses": [["bellecour", "Bellecour", 45.75752, 4.832], ["jacobins", "Jacobins", 45.76051, 4.83383], ["cordeliers", "Cordeliers", 45.76351, 4.83746]]
+ },
+ "marseille": {
+  "nom": "Marseille",
+  "tenus": [["prefecture", "Préfecture", 43.29012, 5.37975], ["hotel_de_ville", "Hôtel de ville", 43.29653, 5.36984]],
+  "nasses": [["reformes", "Réformés", 43.29882, 5.38592], ["general_de_gaulle", "Général-de-Gaulle", 43.29504, 5.3756], ["vieux_port", "Vieux-Port", 43.29415, 5.3744]]
+ },
+ "nantes": {
+  "nom": "Nantes",
+  "tenus": [["prefecture", "Préfecture", 47.2203, -1.55339], ["hotel_de_ville", "Hôtel de ville", 47.21838, -1.55439]],
+  "nasses": [["miroir", "Miroir d'eau", 47.21503, -1.54908], ["commerce", "Commerce", 47.21335, -1.55785], ["graslin", "Graslin", 47.21306, -1.56224]]
+ },
+ "toulouse": {
+  "nom": "Toulouse",
+  "tenus": [["prefecture", "Préfecture", 43.59989, 1.45066], ["capitole", "Capitole", 43.60444, 1.4445]],
+  "nasses": [["jean_jaures", "Jean-Jaurès", 43.6076, 1.45149], ["esquirol", "Esquirol", 43.6003, 1.44477], ["saint_pierre", "Saint-Pierre", 43.6035, 1.43569]]
+ },
+ "bordeaux": {
+  "nom": "Bordeaux",
+  "tenus": [["prefecture", "Préfecture", 44.83735, -0.58666], ["hotel_de_ville", "Hôtel de ville", 44.83791, -0.5797]],
+  "nasses": [["victoire", "Victoire", 44.83099, -0.57233], ["gambetta", "Gambetta", 44.84119, -0.58053], ["bourse", "Bourse", 44.84146, -0.57038]]
+ },
+ "grenoble": {
+  "nom": "Grenoble",
+  "tenus": [["prefecture", "Préfecture", 45.18814, 5.73324], ["hotel_de_ville", "Hôtel de ville", 45.18644, 5.73607]],
+  "nasses": [["gare", "Gare", 45.19025, 5.71493], ["victor_hugo", "Victor-Hugo", 45.18895, 5.72533], ["notre_dame", "Notre-Dame", 45.19278, 5.73151]]
+ },
+ "angers": {
+  "nom": "Angers",
+  "tenus": [["prefecture", "Préfecture", 47.46834, -0.5527], ["hotel_de_ville", "Hôtel de ville", 47.4717, -0.54666]],
+  "nasses": [["gare", "Gare Saint-Laud", 47.46436, -0.55621], ["ralliement", "Ralliement", 47.47118, -0.55228], ["leclerc", "Leclerc", 47.47128, -0.54493]]
+ },
+ "montpellier": {
+  "nom": "Montpellier",
+  "tenus": [["prefecture", "Préfecture", 43.61143, 3.87653], ["palais_de_justice", "Palais de justice", 43.61156, 3.87259]],
+  "nasses": [["gare", "Gare Saint-Roch", 43.60566, 3.8802], ["comedie", "Comédie", 43.60869, 3.87992], ["esplanade", "Esplanade", 43.61115, 3.88118]]
+ }
+}

@@ -23,6 +23,11 @@ export type CarteJson = {
   lieux?: Record<string, [number, number]>;
   portes?: Record<string, [number, number]>;
   centre?: [number, number];
+  nom?: string; // la ville, Paris si absent
+  date?: string; // date de l'extrait OpenStreetMap
+  tenus?: string[];
+  nasses?: string[];
+  noms?: Record<string, string>; // nom affiché de chaque lieu
 };
 // gens : (ligne, colonne, état, groupe) par point. police et barrages : au choix de la simulation.
 export type Image = { t: number; gens: Int16Array; police: Int16Array; barrages: Int16Array; compteur: number };
@@ -51,6 +56,10 @@ export type Definition = {
   graine: number;
   champs: Champ[];
   aideReglages?: string;
+  // l'adresse de la carte selon les réglages (une ville par carte) ; carte.json sinon
+  carte?: (r: Reglages) => string;
+  // une phrase sur la carte chargée, sous la légende
+  infoCarte?: (carte: CarteJson) => string;
   tours: (r: Reglages) => number;
   params: (r: Reglages, foule: string) => object;
   titre: (foule: string, r: Reglages) => [string, string];
@@ -230,10 +239,31 @@ class Panneau {
     this.d.dessiner(g, this.carte, im, k, this.ecart);
   }
 
+  // Une autre carte (une autre ville). Le worker la reçoit avant la partie suivante ; ce qui
+  // restait de l'ancienne carte est jeté.
+  poserCarte(carte: CarteJson, fond: HTMLCanvasElement) {
+    this.carte = carte;
+    this.fond = fond;
+    this.canvas.width = fond.width;
+    this.canvas.height = fond.height;
+    this.trace.width = fond.width;
+    this.trace.height = fond.height;
+    this.cle++;
+    this.images = [];
+    this.lu = 0;
+    this.termine = false;
+    this.dessinee = null;
+    this.worker.postMessage({ type: "carte", carte });
+  }
+
   fermer() {
     this.worker.terminate();
   }
 }
+
+const adresseCarte = (d: Definition, r: Reglages) => (d.carte ? d.carte(r) : `${d.base}/carte.json`);
+// « de Paris », « d'Angers »
+const deVille = (nom: string) => (/^[AEIOUYÂÉÈÊÎÔ]/i.test(nom) ? `d'${nom}` : `de ${nom}`);
 
 const mediane = (t: number[]) => {
   const s = t.filter((x) => Number.isFinite(x)).sort((x, y) => x - y);
@@ -319,6 +349,10 @@ export function SimCartes({ d }: { d: Definition }) {
   const [serie, setSerie] = useState<{ fait: number; a: Resultats[]; b: Resultats[] } | null>(null);
   const [copie, setCopie] = useState(false);
   const [forme, setForme] = useState("293 / 223");
+  // la carte que les workers ont reçue, et son adresse
+  const [carteVue, setCarteVue] = useState<{ adresse: string; carte: CarteJson } | null>(null);
+  const urlCarte = adresseCarte(d, r);
+  const carteAJour = carteVue?.adresse === urlCarte;
 
   const canvasA = useRef<HTMLCanvasElement>(null);
   const canvasB = useRef<HTMLCanvasElement>(null);
@@ -338,14 +372,18 @@ export function SimCartes({ d }: { d: Definition }) {
     let vivant = true;
     let image = 0;
     // l'adresse ne se lit que dans le navigateur, après le premier rendu
+    const depart = depuisAdresse(d, window.location.hash);
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setR(depuisAdresse(d, window.location.hash));
-    fetch(`${d.base}/carte.json`)
+    setR(depart);
+    // la carte du lien d'emblée : pas de détour par celle par défaut
+    const adresseDepart = adresseCarte(d, depart);
+    fetch(adresseDepart)
       .then((rep) => rep.json())
       .then((carte: CarteJson) => {
         if (!vivant || !canvasA.current || !canvasB.current) return;
         carteRef.current = carte;
         setForme(`${carte.w} / ${carte.h}`);
+        setCarteVue({ adresse: adresseDepart, carte });
         const fond = dessinerFond(carte, d.echelle);
         panneaux.current = [canvasA.current, canvasB.current].map((canvas, i) => {
           canvas.width = fond.width;
@@ -401,9 +439,30 @@ export function SimCartes({ d }: { d: Definition }) {
     };
   }, [d, majErreur]);
 
+  // Une autre ville : la nouvelle carte part aux deux workers, puis la partie est relancée
+  // (l'effet suivant attend qu'elle soit arrivée).
+  useEffect(() => {
+    if (!pret || carteAJour) return;
+    let vivant = true;
+    fetch(urlCarte)
+      .then((rep) => rep.json())
+      .then((carte: CarteJson) => {
+        if (!vivant) return;
+        carteRef.current = carte;
+        setForme(`${carte.w} / ${carte.h}`);
+        const fond = dessinerFond(carte, d.echelle);
+        panneaux.current.forEach((p) => p.poserCarte(carte, fond));
+        setCarteVue({ adresse: urlCarte, carte });
+      })
+      .catch(() => setErreur(true));
+    return () => {
+      vivant = false;
+    };
+  }, [d, urlCarte, pret, carteAJour]);
+
   // Tout changement de réglage relance les deux cartes, avec le même tirage.
   useEffect(() => {
-    if (!pret) return;
+    if (!pret || !carteAJour) return;
     const minuteur = setTimeout(() => {
       lecture.current.tour = 0;
       lecture.current.tours = d.tours(r);
@@ -419,7 +478,7 @@ export function SimCartes({ d }: { d: Definition }) {
       window.history.replaceState(null, "", adresse ? `#${adresse}` : window.location.pathname);
     }, 250);
     return () => clearTimeout(minuteur);
-  }, [d, r, pret, majErreur]);
+  }, [d, r, pret, carteAJour, majErreur]);
 
   useEffect(() => {
     lecture.current.pause = pause;
@@ -528,7 +587,7 @@ export function SimCartes({ d }: { d: Definition }) {
               <canvas
                 ref={i === 0 ? canvasA : canvasB}
                 style={{ aspectRatio: forme }}
-                aria-label={`Carte de Paris, ${titres[i][0]} ${titres[i][1]}`}
+                aria-label={`Carte ${deVille(carteVue?.carte.nom ?? "Paris")}, ${titres[i][0]} ${titres[i][1]}`}
               />
               <p className="sim-compteur">
                 <strong>{chiffre}</strong> {texte}
@@ -561,6 +620,7 @@ export function SimCartes({ d }: { d: Definition }) {
           </li>
         ))}
       </ul>
+      {d.infoCarte && carteVue && <p className="sim-aide">{d.infoCarte(carteVue.carte)}</p>}
 
       <section className="sim-reglages">
         <h2>Les réglages</h2>
@@ -614,7 +674,7 @@ export function SimCartes({ d }: { d: Definition }) {
           beaucoup. Avant de conclure, lancez plusieurs tirages.
         </p>
         <div className="sim-barre">
-          <button type="button" className="puce on" onClick={lancerSerie} disabled={!!serie && !serieFinie}>
+          <button type="button" className="puce on" onClick={lancerSerie} disabled={!carteAJour || (!!serie && !serieFinie)}>
             {serie && !serieFinie
               ? `Calcul : ${serie.fait} partie${serie.fait > 1 ? "s" : ""} sur ${d.tirages * 2}`
               : `Lancer ${d.tirages} tirages`}

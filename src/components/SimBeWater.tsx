@@ -2,19 +2,28 @@
 
 import { BLEU, ENCRE, SimCartes, entier, pourcent, type Definition, type Reglages } from "./SimCartes";
 
-// Be water : un cortège ou plusieurs petits groupes dans le centre de Paris.
-// Le modèle est dans public/simulations/be-water/sim.js.
+// Be water : un cortège ou plusieurs petits groupes dans le centre de Paris ou d'une autre
+// ville. Le modèle est dans public/simulations/be-water/sim.js ; les cartes sont
+// carte.json (Paris) et villes/<ville>.json (scripts/fabriquer-villes.mjs).
 
 const PERSONNES_PAR_POINT = 50;
 const E = 3; // pixels par case de 10 m
 
-const NOMS_LIEUX: Record<string, string> = {
-  concorde: "Concorde",
-  elysee: "Élysée",
-  madeleine: "Madeleine",
-  opera: "Opéra",
-  palais_royal: "Palais-Royal",
-};
+const BASE = "/simulations/be-water";
+const VILLES: [string, string][] = [
+  ["paris", "Paris"],
+  ["angers", "Angers"],
+  ["bordeaux", "Bordeaux"],
+  ["grenoble", "Grenoble"],
+  ["lyon", "Lyon"],
+  ["marseille", "Marseille"],
+  ["montpellier", "Montpellier"],
+  ["nantes", "Nantes"],
+  ["toulouse", "Toulouse"],
+];
+
+// « A, B et C »
+const liste = (t: string[]) => (t.length > 1 ? `${t.slice(0, -1).join(", ")} et ${t[t.length - 1]}` : (t[0] ?? ""));
 
 const heures = (tours: number) => {
   const minutes = Math.floor((tours * 10) / 60);
@@ -22,7 +31,7 @@ const heures = (tours: number) => {
 };
 
 const DEFINITION: Definition = {
-  base: "/simulations/be-water",
+  base: BASE,
   echelle: E,
   secondesParTour: 10,
   toursParSeconde: 30, // 2 h simulées en 24 s
@@ -40,6 +49,7 @@ const DEFINITION: Definition = {
   defautB: "20",
   graine: 6,
   champs: [
+    { type: "choix", cle: "ville", court: "ville", nom: "Ville", options: VILLES, defaut: "paris" },
     {
       type: "curseur", cle: "personnes", court: "p", nom: "Personnes en tout",
       min: 2000, max: 30000, pas: 1000, defaut: 10000, lu: (v) => v.toLocaleString("fr-FR"),
@@ -50,8 +60,8 @@ const DEFINITION: Definition = {
     },
     {
       type: "segments", cle: "secteur", court: "s", nom: "D'où viennent les renforts ?",
-      options: [[60, "Du quartier"], [1000, "De tout Paris"]], defaut: 60,
-      aide: "Personne ne sait lequel est vrai, et le résultat change : si tout Paris converge, un seul cortège occupe plus la police que vingt groupes. Si chaque bloc reste dans son quartier, c'est l'inverse. Essayez les deux.",
+      options: [[60, "Du quartier"], [1000, "De toute la ville"]], defaut: 60,
+      aide: "Personne ne sait lequel est vrai, et le résultat change : si toute la ville converge, un seul cortège occupe plus la police que vingt groupes. Si chaque bloc reste dans son quartier, c'est l'inverse. Essayez les deux.",
     },
     {
       type: "curseur", cle: "bloc", court: "bl", nom: "Taille d'un bloc de police", avance: true,
@@ -83,6 +93,14 @@ const DEFINITION: Definition = {
     },
   ],
   aideReglages: "Une unité tient 10 m de rue. Les deux cartes ont la même police.",
+  carte: (r) => (r.ville === "paris" ? `${BASE}/carte.json` : `${BASE}/villes/${r.ville}.json`),
+  infoCarte: (carte) => {
+    const noms = (cles: string[] = []) => cles.map((c) => carte.noms?.[c] ?? c);
+    // la date est un jour UTC : sans timeZone, le 20 novembre deviendrait le 19 à l'ouest
+    const jour = { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" } as const;
+    const date = carte.date ? ` (données du ${new Date(carte.date).toLocaleDateString("fr-FR", jour)})` : "";
+    return `${carte.nom ?? "Paris"}. Tenus par la police sans bouger : ${liste(noms(carte.tenus))}. Places où elle peut encercler, dans l'ordre du parcours déclaré : ${liste(noms(carte.nasses))}. Carte © les contributeurs OpenStreetMap${date}.`;
+  },
   tours: (r) => r.tours as number,
   params: (r: Reglages, foule: string) => ({
     foule: foule === "d" ? "declaree" : "mobile",
@@ -141,7 +159,7 @@ const DEFINITION: Definition = {
   dessiner: (g, carte, im, k, ecart) => {
     g.font = `500 ${Math.round(12 * k)}px "IBM Plex Mono", ui-monospace, monospace`;
     g.fillStyle = "rgba(18,18,18,.6)";
-    for (const [cle, nom] of Object.entries(NOMS_LIEUX)) {
+    for (const [cle, nom] of Object.entries(carte.noms ?? {})) {
       const l = carte.lieux?.[cle];
       if (l) g.fillText(nom.toUpperCase(), l[1] * E + 8 * k, l[0] * E - 8 * k);
     }
