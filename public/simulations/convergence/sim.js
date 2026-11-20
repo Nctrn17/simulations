@@ -13,6 +13,8 @@ export const PERSONNES_PAR_AGENT = 50;
 export const TOUR_S = 15;
 const VOISINS = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [-1, 1], [1, -1], [1, 1]];
 const RACINE2 = Math.SQRT2;
+// champs de distances gardés par partie (0,8 Mo chacun), voir Partie._champ
+const CHAMPS_GARDES = 8;
 
 export const DEFAUTS = {
   foule: "eau", // "eau" : petits groupes par toutes les portes ; "cortege" : tous ensemble d'une porte
@@ -337,6 +339,7 @@ export class Partie {
     }
     this.champ = c.D0;
     this.cleChamp = "";
+    this.champs = new Map();
     this.champCortege = c.D0;
     this.decisionCortege = null;
     this.passages = new Set();
@@ -517,6 +520,19 @@ export class Partie {
     return { cout, vus };
   }
 
+  // Le chemin vers le centre quand ces blocs sont en vue. La clé donne la place de chaque
+  // bloc vu, dans l'ordre : même clé, même surcoût, donc même champ. Les gens revoient
+  // souvent la même police (un barrage qui sort de leur vue puis y revient) : on garde
+  // les derniers champs plutôt que de refaire le calcul, le plus cher de la partie.
+  _champ(cle, cout) {
+    let champ = this.champs.get(cle);
+    if (champ) this.champs.delete(cle);
+    else champ = this.c.distances([this.c.centre], cout);
+    this.champs.set(cle, champ);
+    if (this.champs.size > CHAMPS_GARDES) this.champs.delete(this.champs.keys().next().value);
+    return champ;
+  }
+
   _pasFoule(actifs) {
     const { c, p, rng, charge } = this;
     if (!actifs.length) return;
@@ -526,7 +542,7 @@ export class Partie {
         const { cout, vus } = this._coutVu(actifs.map((a) => this.pos[a]));
         const cle = vus.join(",");
         if (cle !== this.cleChamp) {
-          this.champ = vus.length ? c.distances([c.centre], cout) : c.D0;
+          this.champ = vus.length ? this._champ(cle, cout) : c.D0;
           this.cleChamp = cle;
         }
       }
