@@ -277,6 +277,7 @@ function ChampReglage({ c, r, regler }: { c: Champ; r: Reglages; regler: (cle: s
           type="button"
           key={String(code)}
           className={r[c.cle] === code ? "puce on" : "puce"}
+          aria-pressed={r[c.cle] === code}
           onClick={() => regler(c.cle, code)}
         >
           {nom}
@@ -483,7 +484,7 @@ export function SimCartes({ d }: { d: Definition }) {
         <button type="button" className="puce" onClick={() => setPause((p) => !p)}>
           {pause ? "Reprendre" : "Pause"}
         </button>
-        <button type="button" className={rapide ? "puce on" : "puce"} onClick={() => setRapide((v) => !v)}>
+        <button type="button" className={rapide ? "puce on" : "puce"} aria-pressed={rapide} onClick={() => setRapide((v) => !v)}>
           Vitesse × 4
         </button>
         <button type="button" className="puce" onClick={rejouer}>
