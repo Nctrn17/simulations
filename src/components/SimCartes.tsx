@@ -406,19 +406,35 @@ export function SimCartes({ d }: { d: Definition }) {
     setPause(false);
   };
 
-  // Plusieurs tirages du même réglage : un seul tirage peut tromper.
+  // Plusieurs tirages du même réglage : un seul tirage peut tromper. Les parties ne
+  // dépendent pas les unes des autres : elles se répartissent sur plusieurs workers,
+  // autant que l'appareil en a les moyens : un cœur reste à la page et un à chaque
+  // carte en direct, et chaque worker garde sa copie de la carte (20 à 30 Mo pour la
+  // convergence).
   const lancerSerie = () => {
     const carte = carteRef.current;
     if (!carte) return;
     workersSerie.current.forEach((w) => w.terminate());
-    const graines = Array.from({ length: d.tirages }, (_, i) => (r.graine as number) + 1000 + i);
+    const params = [d.params(r, r.a as string), d.params(r, r.b as string)];
+    // tirage par tirage, les deux cartes : les deux colonnes avancent ensemble
+    const parties: { i: number; graine: number }[] = [];
+    for (let t = 0; t < d.tirages; t++) {
+      for (const i of [0, 1]) parties.push({ i, graine: (r.graine as number) + 1000 + t });
+    }
+    const nav = navigator as Navigator & { deviceMemory?: number };
+    const n = Math.max(
+      2,
+      Math.min(parties.length, 8, (nav.hardwareConcurrency || 4) - 3, Math.floor(nav.deviceMemory ?? 4)),
+    );
+    let suivante = 0;
     setSerie({ fait: 0, a: [], b: [] });
-    workersSerie.current = [r.a as string, r.b as string].map((foule, i) => {
+    workersSerie.current = Array.from({ length: n }, () => {
       const w = new Worker(`${d.base}/worker.js`, { type: "module" });
       w.postMessage({ type: "carte", carte });
       w.onerror = () => setErreur(true);
       w.onmessage = (e: MessageEvent) => {
         if (e.data.type !== "serie") return;
+        const { i } = parties[e.data.cle];
         setSerie((s) =>
           s
             ? {
@@ -428,9 +444,18 @@ export function SimCartes({ d }: { d: Definition }) {
               }
             : s,
         );
-        if (e.data.i === e.data.total - 1) w.terminate();
+        donner();
       };
-      w.postMessage({ type: "serie", cle: 1, params: d.params(r, foule), graines });
+      // la partie suivante de la liste, ou rien : le worker a fini
+      const donner = () => {
+        if (suivante >= parties.length) {
+          w.terminate();
+          return;
+        }
+        const k = suivante++;
+        w.postMessage({ type: "serie", cle: k, params: params[parties[k].i], graines: [parties[k].graine] });
+      };
+      donner();
       return w;
     });
   };
