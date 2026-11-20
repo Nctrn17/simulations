@@ -71,6 +71,18 @@ passe pas par le navigateur : ouvrez aussi la page pour voir que la carte s'anim
 Si votre changement modifie volontairement les règles du modèle, les résultats de
 référence ne tiennent plus : dites-le dans votre proposition.
 
+Une retouche qui ne doit rien changer aux règles (une optimisation, un nettoyage) se
+vérifie aussi au bit près, en une dizaine de secondes :
+
+```bash
+npm run verifier:exact
+```
+
+Le script rejoue quelques parties aux graines fixes et compare chaque tour et chaque
+résultat à `reference/empreintes.json`. Il doit finir sur « 0 écart(s) ». Si vous changez
+les règles exprès, réécrivez ces empreintes avec
+`node scripts/verifier-exact.mjs --ecrire`, après `npm run verifier`.
+
 ## Proposer un changement
 
 Voir [CONTRIBUTING.md](CONTRIBUTING.md).

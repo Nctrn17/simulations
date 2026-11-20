@@ -1,0 +1,336 @@
+{
+ "node": "v24.14.0",
+ "moteurs": {
+  "be-water": {
+   "1 cortège, renforts du quartier (graine 0)": {
+    "tours": 720,
+    "empreinte": "c9c64df0f39fb025",
+    "jalons": [
+     "0a6303a9",
+     "c0e15e33",
+     "326ee092",
+     "85d69930",
+     "53c78e0e",
+     "f0a5c430",
+     "12da2969",
+     "af25c2e6",
+     "4c38d6e1",
+     "f5ca1581",
+     "43032515",
+     "643f0a27",
+     "c9c64df0"
+    ],
+    "resultats": {
+     "nasses": 0.04,
+     "libres_fin": 0.96,
+     "visible": 0.9498124999999954,
+     "encadres": 0.26295833333333335,
+     "foyers": 3.1333333333333333,
+     "plus_grande_foule": 5850.833333333333,
+     "couverture": 0.12577639751552794,
+     "police_occupee": 0.1293333333333333,
+     "km_par_unite": 0.7781,
+     "rues_a_fermer": 24.75,
+     "fermees": 1,
+     "abandonnees": 5,
+     "nasses_vides": 0,
+     "sans_effectif": 0,
+     "avances": 16,
+     "avances_sans_contact": 15
+    }
+   },
+   "20 groupes, renforts du quartier (graine 0)": {
+    "tours": 720,
+    "empreinte": "bc84fb6c0a7e7f93",
+    "jalons": [
+     "cad3f90f",
+     "eb573c8a",
+     "71165017",
+     "54379b20",
+     "39888281",
+     "14429670",
+     "0d66c610",
+     "87760a52",
+     "579d40cc",
+     "4508a81b",
+     "eae00ea8",
+     "6e9f8d57",
+     "bc84fb6c"
+    ],
+    "resultats": {
+     "nasses": 0,
+     "libres_fin": 1,
+     "visible": 0.5084027777777772,
+     "encadres": 0.05304166666666663,
+     "foyers": 12.333333333333334,
+     "plus_grande_foule": 1188.75,
+     "couverture": 0.6086956521739131,
+     "police_occupee": 0.21961111111111095,
+     "km_par_unite": 2.575133333333333,
+     "rues_a_fermer": 101.68333333333334,
+     "fermees": 0,
+     "abandonnees": 5,
+     "nasses_vides": 0,
+     "sans_effectif": 0,
+     "avances": 83,
+     "avances_sans_contact": 83
+    }
+   },
+   "4 groupes, renforts de tout Paris, 600 unités (graine 0)": {
+    "tours": 720,
+    "empreinte": "e63e8b6cc1473c5f",
+    "jalons": [
+     "8974459a",
+     "f7874033",
+     "fea6f0b9",
+     "e779fc7d",
+     "542ced8f",
+     "370661d7",
+     "61765f93",
+     "4eee17f4",
+     "19941b18",
+     "69748918",
+     "f5b10b2e",
+     "16775cec",
+     "e63e8b6c"
+    ],
+    "resultats": {
+     "nasses": 0.085,
+     "libres_fin": 0.915,
+     "visible": 0.6626805555555569,
+     "encadres": 0.16833333333333333,
+     "foyers": 6,
+     "plus_grande_foule": 2367.0833333333335,
+     "couverture": 0.4704968944099379,
+     "police_occupee": 0.3395555555555549,
+     "km_par_unite": 3.583766666666667,
+     "rues_a_fermer": 90.83333333333333,
+     "fermees": 1,
+     "abandonnees": 13,
+     "nasses_vides": 0,
+     "sans_effectif": 0,
+     "avances": 183,
+     "avances_sans_contact": 175
+    }
+   },
+   "parcours déclaré (graine 0)": {
+    "tours": 720,
+    "empreinte": "5efaaa177e91e41d",
+    "jalons": [
+     "3f049d49",
+     "16b8540a",
+     "00d7156a",
+     "975e8a14",
+     "9c2173a8",
+     "cb24d85f",
+     "dce8db15",
+     "3a834ad1",
+     "44f0712b",
+     "b8a16b77",
+     "aa46bd93",
+     "cef76728",
+     "5efaaa17"
+    ],
+    "resultats": {
+     "nasses": 0,
+     "libres_fin": 1,
+     "visible": 0.9979305555555574,
+     "encadres": 0.9914999999999999,
+     "foyers": 1.0083333333333333,
+     "plus_grande_foule": 9975.416666666666,
+     "couverture": 0.03881987577639751,
+     "police_occupee": 0,
+     "km_par_unite": 0,
+     "rues_a_fermer": 11.483333333333333,
+     "fermees": 0,
+     "abandonnees": 0,
+     "nasses_vides": 0,
+     "sans_effectif": 0,
+     "avances": 0,
+     "avances_sans_contact": 0
+    }
+   },
+   "sans police (graine 0)": {
+    "tours": 720,
+    "empreinte": "d747b708fe24afcd",
+    "jalons": [
+     "49309575",
+     "19d17240",
+     "9bfc1a5d",
+     "e98d32de",
+     "9169decc",
+     "ad1f821f",
+     "dc7e7b32",
+     "a11fe571",
+     "5cc68fe2",
+     "9aa9ae54",
+     "0f06863b",
+     "33cddeff",
+     "d747b708"
+    ],
+    "resultats": {
+     "nasses": 0,
+     "libres_fin": 1,
+     "visible": 0.6058749999999996,
+     "encadres": 0,
+     "foyers": 15.125,
+     "plus_grande_foule": 1135,
+     "couverture": 0.6319875776397516,
+     "police_occupee": 0,
+     "km_par_unite": 0,
+     "rues_a_fermer": 97.2,
+     "fermees": 0,
+     "abandonnees": 0,
+     "nasses_vides": 0,
+     "sans_effectif": 50,
+     "avances": 0,
+     "avances_sans_contact": 0
+    }
+   }
+  },
+  "convergence": {
+   "petits groupes, 8 barrages (graine 0)": {
+    "tours": 480,
+    "empreinte": "1216b588ebb63abf",
+    "jalons": [
+     "8cf938a1",
+     "f72090b7",
+     "74c0dd52",
+     "05ae8e5e",
+     "6044b082",
+     "d84f9394",
+     "8f3c6c09",
+     "51e4d95e",
+     "1216b588"
+    ],
+    "resultats": {
+     "arrives": 0.635,
+     "temps_median_min": 61.25,
+     "temps_90_min": 88.30000000000001,
+     "contact_min_par_personne": 0.00125,
+     "part_jamais_au_contact": 0.995,
+     "groupes_max": 35,
+     "rues_approche": 17
+    }
+   },
+   "cortège porte d'Italie, 8 barrages (graine 0)": {
+    "tours": 480,
+    "empreinte": "c6d01421b0699709",
+    "jalons": [
+     "e0202c54",
+     "d6bb3c98",
+     "926af649",
+     "d638b406",
+     "d5db7153",
+     "b01dfaf7",
+     "37fe4415",
+     "fe1de3a4",
+     "c6d01421"
+    ],
+    "resultats": {
+     "arrives": 0.035,
+     "temps_median_min": 87.75,
+     "temps_90_min": null,
+     "contact_min_par_personne": 2.0875,
+     "part_jamais_au_contact": 0.62,
+     "groupes_max": 6,
+     "rues_approche": 3
+    }
+   },
+   "cortège porte Maillot, 24 barrages (graine 0)": {
+    "tours": 480,
+    "empreinte": "f73102d7e32be986",
+    "jalons": [
+     "b7fdd785",
+     "09ae46ef",
+     "f362fba6",
+     "6c9dd152",
+     "4dee584a",
+     "2715d9d6",
+     "a71c650b",
+     "5ce4e563",
+     "f73102d7"
+    ],
+    "resultats": {
+     "arrives": 0,
+     "temps_median_min": null,
+     "temps_90_min": null,
+     "contact_min_par_personne": 0.0725,
+     "part_jamais_au_contact": 0.94,
+     "groupes_max": 6,
+     "rues_approche": 0
+    }
+   },
+   "petits groupes, aucun barrage (graine 0)": {
+    "tours": 370,
+    "empreinte": "98dc8d3b74178341",
+    "jalons": [
+     "8cf938a1",
+     "f72090b7",
+     "74c0dd52",
+     "da475d2e",
+     "12997334",
+     "7bb40972",
+     "33b720da"
+    ],
+    "resultats": {
+     "arrives": 1,
+     "temps_median_min": 60.75,
+     "temps_90_min": 86.25,
+     "contact_min_par_personne": 0,
+     "part_jamais_au_contact": 1,
+     "groupes_max": 35,
+     "rues_approche": 15
+    }
+   },
+   "petits groupes, blocs qui avancent (graine 0)": {
+    "tours": 480,
+    "empreinte": "e66691cc3cdd36ef",
+    "jalons": [
+     "7ac99270",
+     "9e7d8122",
+     "dc4ca340",
+     "15174568",
+     "f0daf98e",
+     "0e8947d8",
+     "aca9873f",
+     "1b5d9711",
+     "e66691cc"
+    ],
+    "resultats": {
+     "arrives": 0.99,
+     "temps_median_min": 61.75,
+     "temps_90_min": 87.825,
+     "contact_min_par_personne": 0.6162499999999999,
+     "part_jamais_au_contact": 0.985,
+     "groupes_max": 33,
+     "rues_approche": 17
+    }
+   },
+   "cortège, blocs qui avancent (graine 0)": {
+    "tours": 480,
+    "empreinte": "2dbadcc549ae3ba9",
+    "jalons": [
+     "bb490a17",
+     "8ccca4ac",
+     "47adf5c7",
+     "fbbafb4d",
+     "7c57a3cd",
+     "e6353db9",
+     "57d85f1f",
+     "48074fc3",
+     "2dbadcc5"
+    ],
+    "resultats": {
+     "arrives": 0.995,
+     "temps_median_min": 71,
+     "temps_90_min": 80.25,
+     "contact_min_par_personne": 0.31375,
+     "part_jamais_au_contact": 0.98,
+     "groupes_max": 5,
+     "rues_approche": 1
+    }
+   }
+  }
+ }
+}
