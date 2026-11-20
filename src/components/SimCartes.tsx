@@ -134,6 +134,7 @@ class Panneau {
   lu = 0;
   cle = 0;
   termine = false;
+  enPanne = false;
   trace: HTMLCanvasElement;
   ecart: Float32Array;
 
@@ -143,7 +144,7 @@ class Panneau {
     private carte: CarteJson,
     private fond: HTMLCanvasElement,
     surFin: (r: Resultats) => void,
-    surErreur: () => void,
+    surPanne: () => void,
   ) {
     this.trace = document.createElement("canvas");
     this.trace.width = fond.width;
@@ -157,12 +158,21 @@ class Panneau {
     this.worker = new Worker(`${d.base}/worker.js`, { type: "module" });
     this.worker.postMessage({ type: "carte", carte });
     // sans ça, une erreur du moteur laisserait « calcul… » affiché pour toujours
-    this.worker.onerror = surErreur;
+    this.worker.onerror = () => {
+      this.enPanne = true;
+      surPanne();
+    };
     this.worker.onmessage = (e: MessageEvent) => {
       const m = e.data;
       if (m.cle !== this.cle) return;
-      if (m.type === "image") this.images.push(m as Image);
-      else if (m.type === "fin") {
+      if (m.type === "image") {
+        this.images.push(m as Image);
+        // une nouvelle partie démarre : le moteur tourne de nouveau
+        if (this.enPanne) {
+          this.enPanne = false;
+          surPanne();
+        }
+      } else if (m.type === "fin") {
         this.termine = true;
         surFin(m.resultats);
       }
@@ -306,6 +316,12 @@ export function SimCartes({ d }: { d: Definition }) {
   const carteRef = useRef<CarteJson | null>(null);
   const lecture = useRef({ tour: 0, pause: false, rapide: false, tours: 0 });
   const workersSerie = useRef<Worker[]>([]);
+  const panneSerie = useRef(false);
+
+  // Le bandeau d'erreur reste tant qu'une carte ou la série est en panne, pas plus.
+  const majErreur = useCallback(() => {
+    setErreur(panneSerie.current || panneaux.current.some((p) => p.enPanne));
+  }, []);
 
   // Montage : les réglages de l'adresse, la carte, les deux workers, la boucle de dessin.
   useEffect(() => {
@@ -330,7 +346,7 @@ export function SimCartes({ d }: { d: Definition }) {
             carte,
             fond,
             (res) => setFins((f) => (i === 0 ? [res, f[1]] : [f[0], res])),
-            () => setErreur(true),
+            majErreur,
           );
         });
         setPret(true);
@@ -371,7 +387,7 @@ export function SimCartes({ d }: { d: Definition }) {
       panneaux.current = [];
       workersSerie.current.forEach((w) => w.terminate());
     };
-  }, [d]);
+  }, [d, majErreur]);
 
   // Tout changement de réglage relance les deux cartes, avec le même tirage.
   useEffect(() => {
@@ -383,13 +399,15 @@ export function SimCartes({ d }: { d: Definition }) {
       setSerie(null);
       workersSerie.current.forEach((w) => w.terminate());
       workersSerie.current = [];
+      panneSerie.current = false;
+      majErreur();
       panneaux.current[0]?.lancer(d.params(r, r.a as string), r.graine as number);
       panneaux.current[1]?.lancer(d.params(r, r.b as string), r.graine as number);
       const adresse = versAdresse(d, r);
       window.history.replaceState(null, "", adresse ? `#${adresse}` : window.location.pathname);
     }, 250);
     return () => clearTimeout(minuteur);
-  }, [d, r, pret]);
+  }, [d, r, pret, majErreur]);
 
   useEffect(() => {
     lecture.current.pause = pause;
@@ -410,13 +428,18 @@ export function SimCartes({ d }: { d: Definition }) {
   const lancerSerie = () => {
     const carte = carteRef.current;
     if (!carte) return;
+    panneSerie.current = false;
+    majErreur();
     workersSerie.current.forEach((w) => w.terminate());
     const graines = Array.from({ length: d.tirages }, (_, i) => (r.graine as number) + 1000 + i);
     setSerie({ fait: 0, a: [], b: [] });
     workersSerie.current = [r.a as string, r.b as string].map((foule, i) => {
       const w = new Worker(`${d.base}/worker.js`, { type: "module" });
       w.postMessage({ type: "carte", carte });
-      w.onerror = () => setErreur(true);
+      w.onerror = () => {
+        panneSerie.current = true;
+        majErreur();
+      };
       w.onmessage = (e: MessageEvent) => {
         if (e.data.type !== "serie") return;
         setSerie((s) =>
