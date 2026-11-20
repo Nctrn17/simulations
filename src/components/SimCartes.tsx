@@ -136,6 +136,8 @@ class Panneau {
   termine = false;
   trace: HTMLCanvasElement;
   ecart: Float32Array;
+  // ce qui est à l'écran : tant que rien ne change, inutile de redessiner
+  dessinee: { im: Image | null; k: number } | null = null;
 
   constructor(
     private d: Definition,
@@ -175,12 +177,14 @@ class Panneau {
     this.lu = 0;
     this.termine = false;
     this.trace.getContext("2d")!.clearRect(0, 0, this.trace.width, this.trace.height);
+    this.dessinee = null;
     this.worker.postMessage({ type: "jouer", cle: this.cle, params: p, graine });
   }
 
   rejouer() {
     this.lu = 0;
     this.trace.getContext("2d")!.clearRect(0, 0, this.trace.width, this.trace.height);
+    this.dessinee = null;
   }
 
   // Jusqu'où on peut lire : tout ce qui est calculé, sans limite si la partie est finie.
@@ -206,6 +210,9 @@ class Panneau {
     const g = this.canvas.getContext("2d")!;
     // sur un petit écran la carte est réduite : on grossit les marques d'autant
     const k = (Math.min(2.2, Math.max(1, 620 / (this.canvas.clientWidth || 620))) * this.canvas.width) / 880;
+    // en pause, à la fin, ou en attendant le calcul : la même image, à la même taille
+    if (this.dessinee && this.dessinee.im === im && this.dessinee.k === k) return;
+    this.dessinee = { im, k };
     g.drawImage(this.fond, 0, 0);
     g.drawImage(this.trace, 0, 0);
     this.d.dessiner(g, this.carte, im, k, this.ecart);
@@ -357,7 +364,9 @@ export function SimCartes({ d }: { d: Definition }) {
           if (maintenant - dernierAffichage > 120) {
             dernierAffichage = maintenant;
             setTour(Math.floor(l.tour));
-            setCompteurs([vues[0]?.compteur ?? 0, vues[1]?.compteur ?? 0]);
+            const [a, b] = [vues[0]?.compteur ?? 0, vues[1]?.compteur ?? 0];
+            // le même tableau si rien n'a bougé : React ne refait pas la page pour rien
+            setCompteurs((c) => (c[0] === a && c[1] === b ? c : [a, b]));
           }
           image = requestAnimationFrame(boucle);
         };
