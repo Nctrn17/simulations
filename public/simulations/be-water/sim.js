@@ -12,8 +12,6 @@ import { Hasard, octets } from "../commun.js";
 
 export const PERSONNES_PAR_AGENT = 50;
 const INF = 65535;
-const POSITIONS = ["concorde", "elysee"];
-const SITES_NASSE = ["madeleine", "opera", "palais_royal"];
 const MARGE_ENCERCLEMENT = 5;
 
 export const DEFAUTS = {
@@ -105,6 +103,11 @@ export class Carte {
     }
     this.lieux = {};
     for (const [nom, [y, x]] of Object.entries(d.lieux)) this.lieux[nom] = ids[y * w + x];
+    // les lieux que la police tient sans bouger, puis les places où elle peut encercler,
+    // dans l'ordre du parcours déclaré (à Paris : Concorde et Élysée ; Madeleine, Opéra,
+    // Palais-Royal)
+    this.tenus = d.tenus.map((nom) => this.lieux[nom]);
+    this.nasses = d.nasses.map((nom) => this.lieux[nom]);
     this.file = new Int32Array(n);
     this.pred = new Int32Array(n);
     this.integrale = new Int32Array((h + 1) * (w + 1));
@@ -249,7 +252,7 @@ export class Partie {
     for (let i = 0; i < n; i++) this.cortege[i] = Math.floor((i * K) / n);
     // les positions tenues barrent des rues : les itinéraires les contournent
     this.tenu = new Uint8Array(c.n);
-    this.sitesPosition = POSITIONS.map((nom) => c.boule(c.lieux[nom], p.rayon_position));
+    this.sitesPosition = c.tenus.map((q) => c.boule(q, p.rayon_position));
     const tenus = [];
     for (const s of this.sitesPosition) for (const q of s) {
       this.tenu[q] = 1;
@@ -260,7 +263,7 @@ export class Partie {
     for (let q = 0; q < c.n; q++) if (dTenu[q] > 8) autres.push(q);
     this.autres = autres;
     // points de passage : d'abord les places, puis des rues prises partout sur la carte
-    const sites = SITES_NASSE.map((nom) => c.lieux[nom]);
+    const sites = c.nasses;
     const tirage = rng.melange(Int32Array.from(autres));
     this.points = sites.concat(Array.from(tirage.subarray(0, p.n_points - sites.length)));
     const permis = new Uint8Array(c.n);
@@ -268,7 +271,7 @@ export class Partie {
     this.permis = permis;
     this.D_points = this.points.map((q) => c.bfs(q, permis));
     this.route = [];
-    for (let k = 0; k < K; k++) this.route.push(this.mobile ? Array.from(rng.permutation(p.n_points)) : [0, 1, 2]);
+    for (let k = 0; k < K; k++) this.route.push(this.mobile ? Array.from(rng.permutation(p.n_points)) : sites.map((_, i) => i));
     this.etape = new Int32Array(K);
     this.but = Int32Array.from(this.route.map((r) => r[0]));
     this.pause = new Int32Array(K).fill(-1);
@@ -465,9 +468,9 @@ export class Partie {
       }
     }
     const restantes = p.n_unites - k;
-    const nSites = SITES_NASSE.length;
+    const nSites = c.nasses.length;
     const nBlocs = Math.max(nSites, Math.floor(restantes / p.taille_bloc));
-    const D_sites = SITES_NASSE.map((nom) => c.bfs(c.lieux[nom]));
+    const D_sites = c.nasses.map((q) => c.bfs(q));
     this.lieux = D_sites.map((D) => {
       const anneau = [];
       const dedans = [];
@@ -494,7 +497,10 @@ export class Partie {
       }
     } else {
       // parcours déclaré : les blocs attendent tout le long
-      const trajet = c.chemin(this.points[0], this.points[1]).concat(c.chemin(this.points[1], this.points[2]));
+      let trajet = [];
+      for (let i = 0; i + 1 < nSites; i++) trajet = trajet.concat(c.chemin(this.points[i], this.points[i + 1]));
+      // une seule place : les blocs attendent autour d'elle
+      if (!trajet.length) trajet = [this.points[0]];
       for (let j = 0; j < nBlocs; j++) {
         const i = nBlocs === 1 ? 0 : Math.floor((j * (trajet.length - 1)) / (nBlocs - 1));
         bases.push(trajet[i]);

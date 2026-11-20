@@ -30,14 +30,16 @@ export default function PageBeWater() {
           <span className="manif-sous-titre">un cortège ou vingt groupes ?</span>
         </h1>
         <p className="chapeau-simple">
-          Dix mille personnes dans le centre de Paris. En un seul cortège, ou en petits groupes qui
+          Dix mille personnes dans le centre de Paris, ou d&apos;une des huit autres villes
+          proposées. En un seul cortège, ou en petits groupes qui
           bougent : qu&apos;est-ce que la police a le plus de mal à suivre ? Le modèle des vidéos tourne
           ici, dans votre navigateur. Changez les réglages et regardez ce que ça donne.
         </p>
         <p className="sim-note">
           C&apos;est un modèle simplifié, pas une preuve et pas un mode d&apos;emploi. Aucun contact
           physique n&apos;est simulé. La police suit des règles écrites d&apos;après un seul témoignage,
-          celui du 17 octobre 2026 à Paris.
+          celui du 17 octobre 2026 à Paris. Dans les autres villes, ce sont les mêmes règles, et les
+          lieux que tient la police sont des hypothèses.
         </p>
 
         <SimBeWater />
@@ -51,7 +53,7 @@ export default function PageBeWater() {
           </p>
           <p>
             Le chiffre le plus solide est le nombre de rues à fermer pour encercler tout le monde : il
-            dépend seulement du plan de Paris et de l&apos;endroit où sont les gens. Les autres chiffres
+            dépend seulement du plan de la ville et de l&apos;endroit où sont les gens. Les autres chiffres
             dépendent des règles ci-dessous, que vous pouvez contester.
           </p>
           <p>
@@ -66,15 +68,18 @@ export default function PageBeWater() {
             <li>Un point représente 50 personnes, une case de la carte 10 m, un tour 10 secondes.</li>
             <li>
               Parcours déclaré : la police connaît le trajet et se poste tout le long à l&apos;avance.
-              Le cortège va de la Madeleine à l&apos;Opéra, puis au Palais-Royal.
+              Le cortège passe par trois places, dans l&apos;ordre : à Paris, de la Madeleine à
+              l&apos;Opéra, puis au Palais-Royal. Celles des autres villes sont écrites sous les
+              cartes.
             </li>
             <li>
               Sans parcours : chaque groupe va d&apos;un point à un autre de la carte, tirés au hasard,
               et fait une pause de 10 à 20 minutes à chaque arrivée.
             </li>
             <li>
-              Deux blocs de police tiennent la Concorde et l&apos;Élysée et ne bougent pas. Les autres
-              attendent autour de la Madeleine, de l&apos;Opéra et du Palais-Royal.
+              Deux blocs de police tiennent deux lieux et ne bougent pas : à Paris, la Concorde et
+              l&apos;Élysée ; ailleurs, en général la préfecture et l&apos;hôtel de ville. Les autres
+              attendent autour des trois places du parcours.
             </li>
             <li>
               Un bloc qui repère 200 personnes ou plus dans son secteur se prépare, puis marche
@@ -87,13 +92,17 @@ export default function PageBeWater() {
               plus l&apos;information met du temps à circuler.
             </li>
             <li>
-              La police n&apos;encercle que sur trois places : la Madeleine, l&apos;Opéra et le
-              Palais-Royal, quand 400 personnes ou plus s&apos;y trouvent et qu&apos;elle a assez
-              d&apos;unités pour fermer toutes les rues.
+              La police n&apos;encercle que sur ces trois places, quand 400 personnes ou plus s&apos;y
+              trouvent et qu&apos;elle a assez d&apos;unités pour fermer toutes les rues.
             </li>
             <li>
               Rues à fermer : le nombre de tronçons de rue situés à 50 m des gens. Les barrer tous
               enfermerait tout le monde.
+            </li>
+            <li>
+              Les cartes viennent d&apos;OpenStreetMap, découpées en cases de 10 m sur 2,9 km de large
+              et 2,2 km de haut. Les rues des autres villes sont triées comme celles de Paris : refaite
+              de la même façon, la carte de Paris ne change que d&apos;une case sur 65 339.
             </li>
           </ul>
           <p>
