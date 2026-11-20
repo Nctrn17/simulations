@@ -97,7 +97,9 @@ function depuisAdresse(d: Definition, hash: string): Reglages {
     const brut = lu.get(c.court) ?? "";
     if (c.type === "curseur") {
       const v = Number(brut);
-      if (Number.isFinite(v)) r[c.cle] = Math.min(c.max, Math.max(c.min, Math.round(v)));
+      // sur un cran du curseur : la valeur qui tourne est celle que le curseur montre
+      const cran = c.min + Math.round((v - c.min) / c.pas) * c.pas;
+      if (Number.isFinite(cran)) r[c.cle] = Math.min(c.max, Math.max(c.min, cran));
     } else if (c.type === "case") r[c.cle] = brut === "1";
     else {
       const option = c.options.find(([code]) => String(code) === brut);
