@@ -47,11 +47,14 @@ Une carte est une grille de cases de 10 m. Le fichier `carte.json` contient :
   tout est écrit en base64.
 - `lieux` (Be water) ou `portes` et `centre` (la convergence) : des points nommés, chacun
   sous la forme `[ligne, colonne]`. Chaque point doit tomber sur une case de rue.
-- Be water seulement : `tenus`, les deux lieux que la police tient sans bouger, et
-  `nasses`, les places où elle peut encercler, dans l'ordre du parcours déclaré (des noms
-  de `lieux`) ; `noms`, le nom affiché de chaque lieu ; `nom`, la ville. Les cartes
-  fabriquées ajoutent `source`, `date` (celle de l'extrait OpenStreetMap) et
-  `centre_degres`, le centre du quartier en latitude et longitude.
+- Be water seulement : `tenus`, les lieux que la police tient sans bouger, et `nasses`,
+  les places où elle peut encercler (des noms de `lieux`) ; `parcours`, les étapes du
+  parcours déclaré, du départ à l'arrivée (les `nasses` si absent, comme à Paris) ; `noms`,
+  le nom affiché de chaque lieu ; `nom`, la ville. Les cartes fabriquées ajoutent `source`,
+  `date` (celle de l'extrait OpenStreetMap), `centre_degres`, le centre du quartier en
+  latitude et longitude, `parcours_info` (`date`, `source`, `url` du parcours déclaré) et,
+  quand un arrêté a interdit le centre, `zone` : les mêmes champs, un `texte`, et
+  `polygones`, des listes de points `[ligne, colonne]` en cases fractionnaires.
 
 Les deux cartes de Paris viennent des données OpenStreetMap, découpées en cases par
 `osm_map.py` du dépôt [nasse-sim](https://github.com/Nctrn17/nasse-sim). La carte de Be
@@ -59,8 +62,13 @@ water n'en garde que le plus grand réseau de rues d'un seul tenant.
 
 ## Ajouter une ville à Be water
 
-1. Ajoutez la ville à `scripts/villes-be-water.json` : ses deux lieux tenus et ses trois
-   places, chacun avec un nom affiché et ses coordonnées en degrés.
+1. Ajoutez la ville à `scripts/villes-be-water.json` : ses lieux tenus (nom affiché et
+   coordonnées en degrés) ; son dernier parcours déclaré, avec sa date, sa source et ses
+   étapes du départ à l'arrivée, chacune en degrés ou comme carrefour de deux voies
+   (`{"carrefour": ["Cours Gambetta", "Avenue Maréchal de Saxe"]}`, noms d'OpenStreetMap) ;
+   ses trois places, prises parmi les étapes ; et, si un arrêté a interdit le centre, sa
+   zone en polygones de degrés (ou `"interieur"` : ce que le parcours entoure). Le départ
+   et l'arrivée en degrés suffisent à centrer la carte.
 2. Fabriquez sa carte (il faut un accès à internet, le script interroge Overpass) :
 
    ```bash
@@ -68,7 +76,8 @@ water n'en garde que le plus grand réseau de rues d'un seul tenant.
    ```
 
    La carte arrive dans `public/simulations/be-water/villes/`. Le script prévient si un
-   lieu tombe loin d'une rue ou près du bord.
+   lieu tombe loin d'une rue ou près du bord, s'il ne trouve pas un carrefour (avec les
+   noms de voies proches) et si le parcours passe sur un lieu tenu, où la foule ne passe pas.
 3. Ajoutez la ville à la liste `VILLES` de `src/components/SimBeWater.tsx`, puis ouvrez la
    page et choisissez-la.
 

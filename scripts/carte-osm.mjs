@@ -148,6 +148,34 @@ export function accrocher(grille, h, w, y, x, rayon = 30) {
   return meilleur && dMin <= rayon * rayon ? meilleur : null;
 }
 
+// Le plus court chemin de rue entre deux cases [ligne, colonne], comme Carte.chemin dans
+// sim.js (voisinage à 4 parcouru haut, bas, gauche, droite) : mêmes cases, dans l'ordre.
+// [] si les deux cases ne sont pas reliées.
+export function chemin(grille, h, w, [ya, xa], [yb, xb]) {
+  const a = ya * w + xa;
+  const b = yb * w + xb;
+  const pred = new Int32Array(h * w).fill(-1);
+  const vu = new Uint8Array(h * w);
+  const file = [a];
+  vu[a] = 1;
+  for (let tete = 0; tete < file.length && !vu[b]; tete++) {
+    const q = file[tete];
+    const y = (q / w) | 0;
+    const x = q - y * w;
+    for (const v of [y > 0 ? q - w : -1, y < h - 1 ? q + w : -1, x > 0 ? q - 1 : -1, x < w - 1 ? q + 1 : -1]) {
+      if (v >= 0 && grille[v] && !vu[v]) {
+        vu[v] = 1;
+        pred[v] = q;
+        file.push(v);
+      }
+    }
+  }
+  if (!vu[b]) return [];
+  const out = [b];
+  while (out[out.length - 1] !== a) out.push(pred[out[out.length - 1]]);
+  return out.reverse().map((q) => [(q / w) | 0, q % w]);
+}
+
 // Position (ligne, colonne, en cases fractionnaires) d'un point dans une grille rasterisée
 // avec les mêmes réglages.
 export function versCase(latPoint, lonPoint, { lat, lon, h, w, cellule = 10, latRef = lat }) {

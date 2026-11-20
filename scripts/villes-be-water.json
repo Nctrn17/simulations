@@ -1,43 +1,174 @@
 {
- "_lisez-moi": "Les villes de be water hors Paris. Pour chaque ville : deux lieux que la police tient sans bouger (comme la Concorde et l'Élysée à Paris) et trois places où elle peut encercler, dans l'ordre du parcours déclaré (comme Madeleine, Opéra, Palais-Royal). Coordonnées en degrés (OpenStreetMap, Nominatim). Carte fabriquée par node scripts/fabriquer-villes.mjs.",
+ "_lisez-moi": "Les villes de be water hors Paris. Pour chaque ville : les lieux que la police tient sans bouger (tenus, comme la Concorde et l'Élysée à Paris) ; le dernier parcours déclaré trouvé dans la presse ou en préfecture, avec sa date et sa source (étapes du départ à l'arrivée, en degrés ou comme carrefour de deux voies OpenStreetMap) ; les places où la police peut encercler (nasses), prises parmi les étapes ; et, s'il y en a une, la zone qu'un arrêté préfectoral a interdite (polygones en degrés, ou \"interieur\" : ce que le parcours entoure). Les arrêtés publient une carte, pas une liste de rues : les zones sont des contours approchés. Carte fabriquée par node scripts/fabriquer-villes.mjs.",
  "lyon": {
   "nom": "Lyon",
-  "tenus": [["prefecture", "Préfecture", 45.76044, 4.84332], ["hotel_de_ville", "Hôtel de ville", 45.76768, 4.83584]],
-  "nasses": [["bellecour", "Bellecour", 45.75752, 4.832], ["jacobins", "Jacobins", 45.76051, 4.83383], ["cordeliers", "Cordeliers", 45.76351, 4.83746]]
+  "tenus": [["prefecture", "Préfecture", 45.76044, 4.84332]],
+  "parcours": {
+   "date": "2026-11-17", "source": "LyonMag",
+   "url": "https://www.lyonmag.com/article/154963/manifestation-du-17-novembre-a-lyon-le-cortege-est-arrive-place-bellecour-7-000-personnes-dans-la-rue",
+   "etapes": [
+    ["manufacture", "Manufacture des Tabacs", 45.74803, 4.86058],
+    ["saxe_gambetta", "Saxe-Gambetta", {"carrefour": ["Cours Gambetta", "Avenue Maréchal de Saxe"]}],
+    ["guillotiere", "Pont de la Guillotière", 45.75629, 4.83985],
+    ["bellecour", "Bellecour", 45.75752, 4.832]
+   ]
+  },
+  "nasses": ["manufacture", "guillotiere", "bellecour"],
+  "zone": {
+   "date": "2026-11-17", "source": "Radio Espace", "texte": "la Presqu'île et la Part-Dieu (le Vieux Lyon, aussi visé, est hors de la carte)",
+   "url": "https://www.radioespace.com/news/locales/225262/manifestation-de-mardi-a-lyon-la-prefecture-ferme-a-nouveau-la-presqu-ile-au-cortege",
+   "polygones": [
+    [[45.77, 4.83], [45.76862, 4.83957], [45.76356, 4.83988], [45.76008, 4.83947], [45.75629, 4.83985], [45.75249, 4.83551], [45.7483, 4.83218], [45.734, 4.8175], [45.75139, 4.82249], [45.75947, 4.82869], [45.7665, 4.829]],
+    [[45.7635, 4.851], [45.7635, 4.86], [45.7575, 4.86], [45.7575, 4.851]]
+   ]
+  }
  },
  "marseille": {
   "nom": "Marseille",
   "tenus": [["prefecture", "Préfecture", 43.29012, 5.37975], ["hotel_de_ville", "Hôtel de ville", 43.29653, 5.36984]],
-  "nasses": [["reformes", "Réformés", 43.29882, 5.38592], ["general_de_gaulle", "Général-de-Gaulle", 43.29504, 5.3756], ["vieux_port", "Vieux-Port", 43.29415, 5.3744]]
+  "parcours": {
+   "date": "2026-11-07", "source": "Maritima",
+   "url": "https://maritima.fr/actualites/social/bouches-du-rhone/16672/bouches-du-rhone-manifestations-non-declarees-interdites-et-securite-renforcee-tout-le-week-end-par-la-prefecture",
+   "etapes": [
+    ["reformes", "Réformés", 43.29882, 5.38592],
+    ["athenes", "Boulevard d'Athènes", {"carrefour": ["Allée Léon Gambetta", "Boulevard d'Athènes"]}],
+    ["marseillaises", "Marseillaises", 43.30155, 5.38088],
+    ["bourdet", "Rue Maurice-Bourdet", 43.30335, 5.37906],
+    ["marceau", "Place Marceau", 43.30499, 5.37322],
+    ["pelletan", "Avenue Camille-Pelletan", 43.3034, 5.37392],
+    ["porte_aix", "Porte d'Aix", 43.30185, 5.37475]
+   ]
+  },
+  "nasses": ["reformes", "marseillaises", "porte_aix"],
+  "zone": {
+   "date": "2026-11-07", "source": "Maritima", "texte": "l'hypercentre",
+   "url": "https://maritima.fr/actualites/social/bouches-du-rhone/16672/bouches-du-rhone-manifestations-non-declarees-interdites-et-securite-renforcee-tout-le-week-end-par-la-prefecture",
+   "polygones": [
+    [[43.2993, 5.37], [43.2985, 5.3825], [43.289, 5.3835], [43.289, 5.3745], [43.2935, 5.374], [43.2961, 5.3742], [43.297, 5.3695]]
+   ]
+  }
  },
  "nantes": {
   "nom": "Nantes",
-  "tenus": [["prefecture", "Préfecture", 47.2203, -1.55339], ["hotel_de_ville", "Hôtel de ville", 47.21838, -1.55439]],
-  "nasses": [["miroir", "Miroir d'eau", 47.21503, -1.54908], ["commerce", "Commerce", 47.21335, -1.55785], ["graslin", "Graslin", 47.21306, -1.56224]]
+  "centre": [47.216, -1.5545],
+  "tenus": [],
+  "parcours": {
+   "date": "2026-11-17", "source": "ICI Loire Océan",
+   "url": "https://www.ici.fr/pays-de-la-loire/loire-atlantique-44/nantes/mobilisation-du-17-novembre-interdiction-de-manifester-a-l-interieur-d-une-large-zone-dans-le-centre-ville-de-nantes-1767210",
+   "etapes": [
+    ["miroir", "Miroir d'eau", 47.21503, -1.54908],
+    ["sully", "Rue Sully", {"carrefour": ["Rue Henri IV", "Rue Sully"]}],
+    ["ceineray", "Quai Ceineray", {"carrefour": ["Rue Sully", "Quai Ceineray"]}],
+    ["otages", "Cours des 50-Otages", {"carrefour": ["Quai Ceineray", "Cours des Cinquante Otages"]}],
+    ["clisson", "Olivier-de-Clisson", {"carrefour": ["Cours des Cinquante Otages", "Cours Olivier de Clisson"]}],
+    ["clisson_bas", "Bas du cours Olivier-de-Clisson", {"carrefour": ["Cours Olivier de Clisson", "Quai de la Fosse|Quai François Mitterrand|Quai de Turenne|Allée de l'Île Gloriette|Quai Turenne"]}]
+   ]
+  },
+  "nasses": ["miroir", "ceineray", "clisson_bas"],
+  "zone": {
+   "date": "2026-11-17", "source": "ICI Loire Océan", "texte": "du pont Anne-de-Bretagne à la gare, de Madeleine-Champ-de-Mars au cimetière Miséricorde",
+   "url": "https://www.ici.fr/pays-de-la-loire/loire-atlantique-44/nantes/mobilisation-du-17-novembre-interdiction-de-manifester-a-l-interieur-d-une-large-zone-dans-le-centre-ville-de-nantes-1767210",
+   "polygones": [
+    [[47.224, -1.569], [47.224, -1.5415], [47.212, -1.5415], [47.21, -1.552], [47.2075, -1.569]]
+   ]
+  }
  },
  "toulouse": {
   "nom": "Toulouse",
   "tenus": [["prefecture", "Préfecture", 43.59989, 1.45066], ["capitole", "Capitole", 43.60444, 1.4445]],
-  "nasses": [["jean_jaures", "Jean-Jaurès", 43.6076, 1.45149], ["esquirol", "Esquirol", 43.6003, 1.44477], ["saint_pierre", "Saint-Pierre", 43.6035, 1.43569]]
+  "parcours": {
+   "date": "2026-11-14", "source": "ICI Occitanie",
+   "url": "https://www.ici.fr/occitanie/haute-garonne-31/toulouse/mobilisations-du-14-novembre-a-toulouse-a-quoi-s-attendre-1264081",
+   "etapes": [
+    ["jaures_haut", "Haut des allées Jean-Jaurès", 43.6096, 1.4538],
+    ["jaures_bas", "Bas des allées Jean-Jaurès", {"carrefour": ["Allées Jean Jaurès", "Boulevard de Strasbourg"]}],
+    ["jeanne_darc", "Jeanne-d'Arc", 43.60907, 1.44624],
+    ["arnaud_bernard", "Arnaud-Bernard", 43.61087, 1.439]
+   ]
+  },
+  "nasses": ["jaures_haut", "jeanne_darc", "arnaud_bernard"]
  },
  "bordeaux": {
   "nom": "Bordeaux",
   "tenus": [["prefecture", "Préfecture", 44.83735, -0.58666], ["hotel_de_ville", "Hôtel de ville", 44.83791, -0.5797]],
-  "nasses": [["victoire", "Victoire", 44.83099, -0.57233], ["gambetta", "Gambetta", 44.84119, -0.58053], ["bourse", "Bourse", 44.84146, -0.57038]]
+  "parcours": {
+   "date": "2026-11-17", "source": "Quoi faire à Bordeaux",
+   "url": "https://quoifaireabordeaux.com/?p=20027951",
+   "etapes": [
+    ["bourse", "Bourse", 44.84146, -0.57038],
+    ["bourgogne", "Porte de Bourgogne", 44.83724, -0.56624],
+    ["victor_hugo", "Cours Victor-Hugo", {"carrefour": ["Cours Victor Hugo", "Rue de Cursol"]}],
+    ["albret", "Cours d'Albret", {"carrefour": ["Rue de Cursol", "Cours d'Albret"], "jusqua":200}],
+    ["gambetta", "Gambetta", 44.84119, -0.58053],
+    ["tourny", "Tourny", 44.8451, -0.57795],
+    ["esprit_des_lois", "Rue Esprit-des-Lois", {"carrefour": ["Rue Esprit des Lois", "Quai"], "jusqua":60}],
+    ["bourse", "Bourse", 44.84146, -0.57038]
+   ]
+  },
+  "nasses": ["bourse", "victor_hugo", "gambetta"]
  },
  "grenoble": {
   "nom": "Grenoble",
   "tenus": [["prefecture", "Préfecture", 45.18814, 5.73324], ["hotel_de_ville", "Hôtel de ville", 45.18644, 5.73607]],
-  "nasses": [["gare", "Gare", 45.19025, 5.71493], ["victor_hugo", "Victor-Hugo", 45.18895, 5.72533], ["notre_dame", "Notre-Dame", 45.19278, 5.73151]]
+  "parcours": {
+   "date": "2026-11-07", "source": "Place Gre'net",
+   "url": "https://www.placegrenet.fr/2026/11/06/des-manifestations-prevues-a-grenoble-et-bourgoin-jallieu-le-samedi-7-novembre-avec-un-dispositif-de-securite-renforce/693521",
+   "etapes": [
+    ["gare", "Gare", 45.19025, 5.71493],
+    ["alsace_lorraine", "Avenue Alsace-Lorraine", {"carrefour": ["Avenue Alsace-Lorraine", "Cours Jean Jaurès"]}],
+    ["foch", "Boulevard Foch", {"carrefour": ["Cours Jean Jaurès", "Boulevard Maréchal Foch"]}],
+    ["albert_1er", "Avenue Albert-Ier", {"carrefour": ["Boulevard Maréchal Foch", "Albert 1er de Belgique"]}],
+    ["clemenceau", "Boulevard Clemenceau", {"carrefour": ["Albert 1er de Belgique", "Boulevard Clemenceau"]}],
+    ["mistral", "Parc Paul-Mistral", 45.18443, 5.73667]
+   ]
+  },
+  "nasses": ["gare", "foch", "mistral"]
  },
  "angers": {
   "nom": "Angers",
-  "tenus": [["prefecture", "Préfecture", 47.46834, -0.5527], ["hotel_de_ville", "Hôtel de ville", 47.4717, -0.54666]],
-  "nasses": [["gare", "Gare Saint-Laud", 47.46436, -0.55621], ["ralliement", "Ralliement", 47.47118, -0.55228], ["leclerc", "Leclerc", 47.47128, -0.54493]]
+  "tenus": [["prefecture", "Préfecture", 47.46834, -0.5527]],
+  "parcours": {
+   "date": "2026-11-17", "source": "My Angers",
+   "url": "https://my-angers.info/11/16/a-angers-la-prefecture-interdit-certains-rassemblements-avant-la-manifestation-du-17-novembre-voici-les-secteurs-concernes/201714",
+   "etapes": [
+    ["leclerc", "Leclerc", 47.47128, -0.54493],
+    ["bessonneau", "Boulevard Bessonneau", {"carrefour": ["Boulevard du Maréchal Joffre", "Boulevard Bessonneau"]}],
+    ["resistance", "Boulevard de la Résistance", {"carrefour": ["Boulevard Bessonneau", "Résistance et Déportation"]}],
+    ["foch", "Boulevard Foch", {"carrefour": ["Résistance et Déportation", "Boulevard du Maréchal Foch"]}],
+    ["roi_rene", "Roi-René", {"carrefour": ["Boulevard du Maréchal Foch", "Boulevard du Roi René"]}],
+    ["de_gaulle", "Boulevard du Général-de-Gaulle", {"carrefour": ["Boulevard du Roi René", "Boulevard du Général de Gaulle"]}],
+    ["quai_gambetta", "Quai Gambetta", 47.47474, -0.55568],
+    ["carnot", "Boulevard Carnot", {"carrefour": ["Boulevard Ayrault", "Boulevard Carnot"]}],
+    ["leclerc", "Leclerc", 47.47128, -0.54493]
+   ]
+  },
+  "nasses": ["leclerc", "roi_rene", "quai_gambetta"],
+  "zone": {
+   "date": "2026-11-05", "source": "Préfecture de Maine-et-Loire", "texte": "l'hypercentre, à l'intérieur des boulevards",
+   "url": "https://www.maine-et-loire.gouv.fr/Publications/Avis-officiels/Arretes-Interdiction-partielle-de-manifester-dans-le-centre-ville-d-Angers-le-5-novembre-2026",
+   "polygones": "interieur"
+  }
  },
  "montpellier": {
   "nom": "Montpellier",
   "tenus": [["prefecture", "Préfecture", 43.61143, 3.87653], ["palais_de_justice", "Palais de justice", 43.61156, 3.87259]],
-  "nasses": [["gare", "Gare Saint-Roch", 43.60566, 3.8802], ["comedie", "Comédie", 43.60869, 3.87992], ["esplanade", "Esplanade", 43.61115, 3.88118]]
+  "parcours": {
+   "date": "2026-11-05", "source": "France 3 Occitanie",
+   "url": "https://france3-regions.franceinfo.fr/occitanie/herault/montpellier/manifestation-du-5-novembre-le-cortege-ne-pourra-pas-passer-en-centre-ville-ce-que-l-on-sait-du-dispositif-de-securite-et-des-zones-interdites-a-montpellier-3444510.html",
+   "etapes": [
+    ["max_rouquette", "Max-Rouquette", 43.6118, 3.86761],
+    ["gambetta", "Cours Gambetta", 43.60695, 3.87106],
+    ["strasbourg", "Boulevard de Strasbourg", 43.60361, 3.88925],
+    ["europe", "Place de l'Europe", 43.60739, 3.89397]
+   ]
+  },
+  "nasses": ["max_rouquette", "strasbourg", "europe"],
+  "zone": {
+   "date": "2026-11-05", "source": "France 3 Occitanie", "texte": "l'Écusson et ses abords, jusqu'à la Comédie",
+   "url": "https://france3-regions.franceinfo.fr/occitanie/herault/montpellier/manifestation-du-5-novembre-le-cortege-ne-pourra-pas-passer-en-centre-ville-ce-que-l-on-sait-du-dispositif-de-securite-et-des-zones-interdites-a-montpellier-3444510.html",
+   "polygones": [
+    [[43.61147, 3.87008], [43.61363, 3.87311], [43.61463, 3.8799], [43.61317, 3.88216], [43.61115, 3.88118], [43.60869, 3.87992], [43.606, 3.879], [43.60701, 3.87515], [43.61003, 3.87226]]
+   ]
+  }
  }
 }

@@ -45,7 +45,23 @@ export const DEFAUTS = {
   portee: 12,
   contact: 3,
   attente: 30,
+  zone: false, // fermer la zone de l'arrêté préfectoral, si la carte en a une
 };
+
+// Largeur des rues du parcours déclaré laissées ouvertes dans une zone fermée : 30 m de
+// part et d'autre, assez pour qu'un cortège y passe.
+const LARGEUR_AXE = 3;
+
+// Le point (y, x) est-il dans le polygone [[y, x], ...] ? (règle du rayon, en cases)
+function dedans(poly, y, x) {
+  let oui = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [yi, xi] = poly[i];
+    const [yj, xj] = poly[j];
+    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) oui = !oui;
+  }
+  return oui;
+}
 
 // Parcours déclaré : un seul cortège, et la police n'a ni retard ni préparation.
 export function config(o = {}) {
@@ -108,6 +124,17 @@ export class Carte {
     // Palais-Royal)
     this.tenus = d.tenus.map((nom) => this.lieux[nom]);
     this.nasses = d.nasses.map((nom) => this.lieux[nom]);
+    // les étapes du parcours déclaré, du départ à l'arrivée (à Paris : les trois places)
+    this.parcours = (d.parcours ?? d.nasses).map((nom) => this.lieux[nom]);
+    // la zone d'un arrêté préfectoral, si la carte en a une : les cases de rue dont le
+    // centre tombe dans l'un de ses polygones (en cases, voir scripts/fabriquer-villes.mjs)
+    this.zone = null;
+    if (d.zone?.polygones?.length) {
+      this.zone = new Uint8Array(n);
+      for (let q = 0; q < n; q++) {
+        if (d.zone.polygones.some((poly) => dedans(poly, this.ys[q] + 0.5, this.xs[q] + 0.5))) this.zone[q] = 1;
+      }
+    }
     this.file = new Int32Array(n);
     this.pred = new Int32Array(n);
     this.integrale = new Int32Array((h + 1) * (w + 1));
@@ -258,16 +285,30 @@ export class Partie {
       this.tenu[q] = 1;
       tenus.push(q);
     }
+    // la zone de l'arrêté, si elle est fermée : aucune foule n'y entre, sauf sur les rues du
+    // parcours déclaré. Sans zone, `ferme` est `tenu`.
+    this.ferme = this.tenu;
+    if (p.zone && c.zone) {
+      this.ferme = Uint8Array.from(this.tenu);
+      let axe = [];
+      for (let i = 0; i + 1 < c.parcours.length; i++) axe = axe.concat(c.chemin(c.parcours[i], c.parcours[i + 1]));
+      const dAxe = c.bfs(axe.length ? axe : c.parcours);
+      for (let q = 0; q < c.n; q++) if (c.zone[q] && dAxe[q] > LARGEUR_AXE) this.ferme[q] = 1;
+    }
     const dTenu = c.bfs(tenus);
     const autres = [];
-    for (let q = 0; q < c.n; q++) if (dTenu[q] > 8) autres.push(q);
+    for (let q = 0; q < c.n; q++) if (dTenu[q] > 8 && !this.ferme[q]) autres.push(q);
     this.autres = autres;
-    // points de passage : d'abord les places, puis des rues prises partout sur la carte
-    const sites = c.nasses;
+    // points de passage : d'abord les places (pour le parcours déclaré, ses étapes), puis des
+    // rues prises partout sur la carte
+    const sites = this.mobile ? c.nasses : c.parcours;
     const tirage = rng.melange(Int32Array.from(autres));
     this.points = sites.concat(Array.from(tirage.subarray(0, p.n_points - sites.length)));
+    // le cortège déclaré fait halte aux places ; à une autre étape (un carrefour), il continue
+    const places = new Set(c.nasses);
+    this.halte = Uint8Array.from(this.points, (q, i) => (this.mobile || i >= sites.length || places.has(q) ? 1 : 0));
     const permis = new Uint8Array(c.n);
-    for (let q = 0; q < c.n; q++) permis[q] = this.tenu[q] ? 0 : 1;
+    for (let q = 0; q < c.n; q++) permis[q] = this.ferme[q] ? 0 : 1;
     this.permis = permis;
     this.D_points = this.points.map((q) => c.bfs(q, permis));
     this.route = [];
@@ -292,7 +333,7 @@ export class Partie {
       let pool = [];
       for (;;) {
         pool = [];
-        for (let q = 0; q < c.n; q++) if (D[q] <= r && !this.tenu[q]) pool.push(q);
+        for (let q = 0; q < c.n; q++) if (D[q] <= r && !this.ferme[q]) pool.push(q);
         if (pool.length * p.cap >= taille * 2 || r > 400) break;
         r += 2;
       }
@@ -427,7 +468,8 @@ export class Partie {
       const mi = m.length >> 1;
       const mediane = m.length % 2 ? d[mi] : (d[mi - 1] + d[mi]) / 2;
       if (mediane <= 10) {
-        if (this.pause[k] < 0) this.pause[k] = rng.entier(p.pause_min, p.pause_max);
+        if (!this.halte[this.but[k]]) this._prochaineEtape(k);
+        else if (this.pause[k] < 0) this.pause[k] = rng.entier(p.pause_min, p.pause_max);
         else if (this.pause[k] === 0) this._prochaineEtape(k);
         else this.pause[k]--;
       }
@@ -498,7 +540,7 @@ export class Partie {
     } else {
       // parcours déclaré : les blocs attendent tout le long
       let trajet = [];
-      for (let i = 0; i + 1 < nSites; i++) trajet = trajet.concat(c.chemin(this.points[i], this.points[i + 1]));
+      for (let i = 0; i + 1 < c.parcours.length; i++) trajet = trajet.concat(c.chemin(this.points[i], this.points[i + 1]));
       // une seule place : les blocs attendent autour d'elle
       if (!trajet.length) trajet = [this.points[0]];
       for (let j = 0; j < nBlocs; j++) {
@@ -683,7 +725,7 @@ export class Partie {
   _pasPolice() {
     const { c, p } = this;
     const { nbr } = c;
-    this.bloque.set(this.tenu);
+    this.bloque.set(this.ferme);
     this.blocageOps = false;
     let marche = 0;
     for (const op of this.ops.values()) {
@@ -836,7 +878,8 @@ export class Partie {
     const { c } = this;
     const { h, w } = c;
     if (!libres.length) return 0;
-    const d = c.bfs(libres);
+    // zone fermée : ses rues le sont déjà, il n'y a pas à les compter
+    const d = c.bfs(libres, this.p.zone && c.zone ? this.permis : null);
     const m = this.marques;
     const cases = [];
     for (let q = 0; q < c.n; q++) {
@@ -986,7 +1029,7 @@ export class Partie {
     }
     const barrages = [];
     if (this.blocageOps) {
-      for (let q = 0; q < c.n; q++) if (this.bloque[q] && !this.tenu[q]) barrages.push(c.ys[q], c.xs[q]);
+      for (let q = 0; q < c.n; q++) if (this.bloque[q] && !this.ferme[q]) barrages.push(c.ys[q], c.xs[q]);
     }
     return {
       t: this.t,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
 // Le cadre commun aux simulations : deux foules face à la même police, côte à côte.
 //
@@ -28,14 +28,20 @@ export type CarteJson = {
   tenus?: string[];
   nasses?: string[];
   noms?: Record<string, string>; // nom affiché de chaque lieu
+  parcours?: string[]; // étapes du parcours déclaré, du départ à l'arrivée ; les nasses si absent
+  parcours_info?: Source;
+  // la zone d'un arrêté préfectoral : polygones de [ligne, colonne], en cases
+  zone?: Source & { texte?: string; polygones: [number, number][][] };
 };
+export type Source = { date: string; source: string; url: string };
 // gens : (ligne, colonne, état, groupe) par point. police et barrages : au choix de la simulation.
 export type Image = { t: number; gens: Int16Array; police: Int16Array; barrages: Int16Array; compteur: number };
 export type Resultats = Record<string, number>;
 export type Valeur = number | string | boolean;
 export type Reglages = Record<string, Valeur>;
 
-type Commun = { cle: string; court: string; nom: string; avance?: boolean; si?: (r: Reglages) => boolean };
+// si : le réglage n'apparaît que si la fonction le veut (selon les réglages ou la carte chargée)
+type Commun = { cle: string; court: string; nom: string; avance?: boolean; si?: (r: Reglages, carte?: CarteJson) => boolean };
 export type Champ =
   | (Commun & { type: "curseur"; min: number; max: number; pas: number; defaut: number; lu: (v: number) => string })
   | (Commun & { type: "case"; defaut: boolean })
@@ -58,8 +64,8 @@ export type Definition = {
   aideReglages?: string;
   // l'adresse de la carte selon les réglages (une ville par carte) ; carte.json sinon
   carte?: (r: Reglages) => string;
-  // une phrase sur la carte chargée, sous la légende
-  infoCarte?: (carte: CarteJson) => string;
+  // quelques phrases sur la carte chargée, sous la légende
+  infoCarte?: (carte: CarteJson) => ReactNode;
   tours: (r: Reglages) => number;
   params: (r: Reglages, foule: string) => object;
   titre: (foule: string, r: Reglages) => [string, string];
@@ -67,8 +73,11 @@ export type Definition = {
   compteur: (n: number) => [string, string];
   legende: [string, string][];
   mesures: Mesure[];
-  // k : grossissement des marques, selon la taille de la carte à l'écran
-  dessiner: (g: CanvasRenderingContext2D, carte: CarteJson, im: Image | null, k: number, ecart: Float32Array) => void;
+  // k : grossissement des marques, selon la taille de la carte à l'écran ; params : ceux de
+  // la partie en cours (ce que params() a donné), null avant la première
+  dessiner: (
+    g: CanvasRenderingContext2D, carte: CarteJson, im: Image | null, k: number, ecart: Float32Array, params: object | null,
+  ) => void;
 };
 
 export const pourcent = (v: number) => (Number.isFinite(v) ? `${(v * 100).toFixed(0)} %` : "–");
@@ -146,6 +155,7 @@ class Panneau {
   cle = 0;
   termine = false;
   enPanne = false;
+  params: object | null = null;
   trace: HTMLCanvasElement;
   ecart: Float32Array;
   // ce qui est à l'écran : tant que rien ne change, inutile de redessiner
@@ -193,6 +203,7 @@ class Panneau {
   }
 
   lancer(p: object, graine: number) {
+    this.params = p;
     this.cle++;
     this.images = [];
     this.lu = 0;
@@ -236,7 +247,7 @@ class Panneau {
     this.dessinee = { im, k };
     g.drawImage(this.fond, 0, 0);
     g.drawImage(this.trace, 0, 0);
-    this.d.dessiner(g, this.carte, im, k, this.ecart);
+    this.d.dessiner(g, this.carte, im, k, this.ecart, this.params);
   }
 
   // Une autre carte (une autre ville). Le worker la reçoit avant la partie suivante ; ce qui
@@ -566,7 +577,7 @@ export function SimCartes({ d }: { d: Definition }) {
 
   const titres = [d.titre(r.a as string, r), d.titre(r.b as string, r)];
   const serieFinie = serie && serie.fait === d.tirages * 2;
-  const visibles = d.champs.filter((c) => !c.si || c.si(r));
+  const visibles = d.champs.filter((c) => !c.si || c.si(r, carteVue?.carte));
   const simples = visibles.filter((c) => !c.avance && c.type !== "segments");
   const segments = visibles.filter((c) => !c.avance && c.type === "segments");
   const avances = visibles.filter((c) => c.avance);

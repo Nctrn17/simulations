@@ -1,6 +1,6 @@
 "use client";
 
-import { BLEU, ENCRE, SimCartes, entier, pourcent, type Definition, type Reglages } from "./SimCartes";
+import { BLEU, ENCRE, SimCartes, entier, pourcent, type CarteJson, type Definition, type Reglages } from "./SimCartes";
 
 // Be water : un cortège ou plusieurs petits groupes dans le centre de Paris ou d'une autre
 // ville. Le modèle est dans public/simulations/be-water/sim.js ; les cartes sont
@@ -24,6 +24,48 @@ const VILLES: [string, string][] = [
 
 // « A, B et C »
 const liste = (t: string[]) => (t.length > 1 ? `${t.slice(0, -1).join(", ")} et ${t[t.length - 1]}` : (t[0] ?? ""));
+
+// Le tracé du parcours déclaré, case par case : le même plus court chemin que Carte.chemin
+// dans sim.js (voisinage à 4, parcouru haut, bas, gauche, droite). Calculé une fois par carte.
+const traces = new WeakMap<CarteJson, [number, number][]>();
+function tracer(carte: CarteJson): [number, number][] {
+  const deja = traces.get(carte);
+  if (deja) return deja;
+  const { h, w } = carte;
+  const bits = atob(carte.rues);
+  const rue = (i: number) => (bits.charCodeAt(i >> 3) >> (7 - (i & 7))) & 1;
+  const etapes = (carte.parcours ?? carte.nasses ?? []).map((cle) => carte.lieux?.[cle]).filter((l) => l !== undefined);
+  const out: [number, number][] = [];
+  for (let e = 0; e + 1 < etapes.length; e++) {
+    const a = etapes[e][0] * w + etapes[e][1];
+    const b = etapes[e + 1][0] * w + etapes[e + 1][1];
+    const pred = new Int32Array(h * w).fill(-1);
+    pred[a] = a;
+    const file = [a];
+    for (let t = 0; t < file.length && pred[b] < 0; t++) {
+      const q = file[t];
+      const y = Math.floor(q / w);
+      const x = q - y * w;
+      for (const v of [y > 0 ? q - w : -1, y < h - 1 ? q + w : -1, x > 0 ? q - 1 : -1, x < w - 1 ? q + 1 : -1]) {
+        if (v >= 0 && pred[v] < 0 && rue(v)) {
+          pred[v] = q;
+          file.push(v);
+        }
+      }
+    }
+    if (pred[b] < 0) continue;
+    const morceau: [number, number][] = [];
+    for (let q = b; q !== a; q = pred[q]) morceau.push([Math.floor(q / w), q % w]);
+    morceau.push([Math.floor(a / w), a % w]);
+    out.push(...morceau.reverse());
+  }
+  traces.set(carte, out);
+  return out;
+}
+
+// « le 5 novembre 2026 » : la date est un jour UTC ; sans timeZone, il deviendrait le 4 à l'ouest
+const jour = (iso: string) =>
+  new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 
 const heures = (tours: number) => {
   const minutes = Math.floor((tours * 10) / 60);
@@ -50,6 +92,10 @@ const DEFINITION: Definition = {
   graine: 6,
   champs: [
     { type: "choix", cle: "ville", court: "ville", nom: "Ville", options: VILLES, defaut: "paris" },
+    {
+      type: "case", cle: "zone", court: "z", nom: "Centre fermé par arrêté", defaut: false,
+      si: (_, carte) => Boolean(carte?.zone),
+    },
     {
       type: "curseur", cle: "personnes", court: "p", nom: "Personnes en tout",
       min: 2000, max: 30000, pas: 1000, defaut: 10000, lu: (v) => v.toLocaleString("fr-FR"),
@@ -96,10 +142,33 @@ const DEFINITION: Definition = {
   carte: (r) => (r.ville === "paris" ? `${BASE}/carte.json` : `${BASE}/villes/${r.ville}.json`),
   infoCarte: (carte) => {
     const noms = (cles: string[] = []) => cles.map((c) => carte.noms?.[c] ?? c);
-    // la date est un jour UTC : sans timeZone, le 20 novembre deviendrait le 19 à l'ouest
-    const jour = { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" } as const;
-    const date = carte.date ? ` (données du ${new Date(carte.date).toLocaleDateString("fr-FR", jour)})` : "";
-    return `${carte.nom ?? "Paris"}. Tenus par la police sans bouger : ${liste(noms(carte.tenus))}. Places où elle peut encercler, dans l'ordre du parcours déclaré : ${liste(noms(carte.nasses))}. Carte © les contributeurs OpenStreetMap${date}.`;
+    const date = carte.date ? ` (données du ${jour(carte.date)})` : "";
+    const p = carte.parcours_info;
+    const z = carte.zone;
+    const lien = (s: { url: string; source: string }) => (
+      <a href={s.url} rel="noreferrer">
+        {s.source}
+      </a>
+    );
+    // Paris : les trois places sont le parcours déclaré, comme dans les vidéos
+    if (!p) {
+      return `${carte.nom ?? "Paris"}. Tenus par la police sans bouger : ${liste(noms(carte.tenus))}. Places où elle peut encercler, dans l'ordre du parcours déclaré : ${liste(noms(carte.nasses))}. Carte © les contributeurs OpenStreetMap${date}.`;
+    }
+    return (
+      <>
+        {carte.nom}. Parcours déclaré du {jour(p.date)} ({lien(p)}) : {liste(noms(carte.parcours))}.{" "}
+        {carte.tenus?.length ? `Tenus par la police sans bouger : ${liste(noms(carte.tenus))}. ` : ""}
+        Places où elle peut encercler : {liste(noms(carte.nasses))}.{" "}
+        {z && (
+          <>
+            Zone interdite aux manifestations le {jour(z.date)} ({lien(z)}) : {z.texte}, en contour approché
+            (l&apos;arrêté publie une carte, pas une liste de rues). Avec « Centre fermé par arrêté », personne
+            n&apos;y entre, sauf par les rues du parcours.{" "}
+          </>
+        )}
+        Carte © les contributeurs OpenStreetMap{date}.
+      </>
+    );
   },
   tours: (r) => r.tours as number,
   params: (r: Reglages, foule: string) => ({
@@ -115,6 +184,7 @@ const DEFINITION: Definition = {
     panique: (r.panique as number) / 100,
     vitesse_taille: r.vitesseTaille,
     T: r.tours,
+    zone: r.zone,
   }),
   titre: (code, r) => {
     const personnes = r.personnes as number;
@@ -156,12 +226,47 @@ const DEFINITION: Definition = {
     { cle: "avances", nom: "Avances de la police", aide: "un bloc qui marche vers une foule", forme: entier },
     { cle: "nasses", nom: "Gens encerclés", aide: "au moins une fois dans la partie", forme: pourcent },
   ],
-  dessiner: (g, carte, im, k, ecart) => {
+  dessiner: (g, carte, im, k, ecart, params) => {
+    const pr = params as { foule?: string; zone?: boolean } | null;
+    // la zone fermée : grisée, bordée d'un trait
+    const zone = pr?.zone && carte.zone;
+    if (zone) {
+      g.beginPath();
+      for (const poly of zone.polygones) {
+        poly.forEach(([y, x], i) => (i ? g.lineTo(x * E, y * E) : g.moveTo(x * E, y * E)));
+        g.closePath();
+      }
+      g.fillStyle = "rgba(18,18,18,.08)";
+      g.fill();
+      g.strokeStyle = "rgba(18,18,18,.45)";
+      g.lineWidth = 1.5 * k;
+      g.setLineDash([4 * k, 4 * k]);
+      g.stroke();
+      g.setLineDash([]);
+    }
+    // le parcours déclaré, quand une carte le suit ou que la zone ne laisse que lui
+    if (carte.parcours && (pr?.foule === "declaree" || zone)) {
+      const trace = tracer(carte);
+      g.beginPath();
+      trace.forEach(([y, x], i) => (i ? g.lineTo((x + 0.5) * E, (y + 0.5) * E) : g.moveTo((x + 0.5) * E, (y + 0.5) * E)));
+      g.strokeStyle = "rgba(18,18,18,.35)";
+      g.lineWidth = 2.5 * k;
+      g.setLineDash([7 * k, 5 * k]);
+      g.stroke();
+      g.setLineDash([]);
+    }
     g.font = `500 ${Math.round(12 * k)}px "IBM Plex Mono", ui-monospace, monospace`;
     g.fillStyle = "rgba(18,18,18,.6)";
-    for (const [cle, nom] of Object.entries(carte.noms ?? {})) {
+    // le nom des lieux tenus et des places ; les étapes du parcours restent sans nom
+    for (const cle of [...(carte.tenus ?? []), ...(carte.nasses ?? [])]) {
       const l = carte.lieux?.[cle];
-      if (l) g.fillText(nom.toUpperCase(), l[1] * E + 8 * k, l[0] * E - 8 * k);
+      const nom = carte.noms?.[cle];
+      if (!l || !nom) continue;
+      // à gauche du point quand le nom déborderait du bord droit
+      const texte = nom.toUpperCase();
+      const large = g.measureText(texte).width;
+      const x = l[1] * E + 8 * k + large > g.canvas.width ? l[1] * E - 8 * k - large : l[1] * E + 8 * k;
+      g.fillText(texte, x, l[0] * E - 8 * k);
     }
     if (!im) return;
     const c = (v: number) => (v + 0.5) * E;

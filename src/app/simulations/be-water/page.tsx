@@ -38,8 +38,9 @@ export default function PageBeWater() {
         <p className="sim-note">
           C&apos;est un modèle simplifié, pas une preuve et pas un mode d&apos;emploi. Aucun contact
           physique n&apos;est simulé. La police suit des règles écrites d&apos;après un seul témoignage,
-          celui du 17 octobre 2026 à Paris. Dans les autres villes, ce sont les mêmes règles, et les
-          lieux que tient la police sont des hypothèses.
+          celui du 17 octobre 2026 à Paris. Dans les autres villes, ce sont les mêmes règles ; le
+          parcours déclaré et la zone interdite viennent de la presse ou de la préfecture (les
+          sources sont sous les cartes), les lieux que tient la police sont des hypothèses.
         </p>
 
         <SimBeWater />
@@ -68,9 +69,15 @@ export default function PageBeWater() {
             <li>Un point représente 50 personnes, une case de la carte 10 m, un tour 10 secondes.</li>
             <li>
               Parcours déclaré : la police connaît le trajet et se poste tout le long à l&apos;avance.
-              Le cortège passe par trois places, dans l&apos;ordre : à Paris, de la Madeleine à
-              l&apos;Opéra, puis au Palais-Royal. Celles des autres villes sont écrites sous les
-              cartes.
+              Le cortège passe par trois places, dans l&apos;ordre, et fait halte à chacune : à Paris,
+              de la Madeleine à l&apos;Opéra, puis au Palais-Royal. Dans les autres villes, il suit le
+              dernier parcours déclaré trouvé, écrit sous les cartes, et ne s&apos;arrête qu&apos;aux places.
+            </li>
+            <li>
+              Centre fermé par arrêté (dans les villes où un arrêté a interdit le centre) : personne
+              n&apos;entre dans la zone, sauf par les rues du parcours déclaré, sur 30 m de part et
+              d&apos;autre. La fermer ne coûte aucune unité de police, et elle compte comme un mur : ses
+              rues ne sont pas à fermer pour encercler les gens qui la longent.
             </li>
             <li>
               Sans parcours : chaque groupe va d&apos;un point à un autre de la carte, tirés au hasard,
