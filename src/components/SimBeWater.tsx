@@ -14,12 +14,18 @@ const VILLES: [string, string][] = [
   ["paris", "Paris"],
   ["angers", "Angers"],
   ["bordeaux", "Bordeaux"],
+  ["brest", "Brest"],
   ["grenoble", "Grenoble"],
+  ["lille", "Lille"],
   ["lyon", "Lyon"],
   ["marseille", "Marseille"],
   ["montpellier", "Montpellier"],
   ["nantes", "Nantes"],
+  ["nice", "Nice"],
+  ["rennes", "Rennes"],
+  ["strasbourg", "Strasbourg"],
   ["toulouse", "Toulouse"],
+  ["tours", "Tours"],
 ];
 
 // « A, B et C »

@@ -30,7 +30,7 @@ export default function PageBeWater() {
           <span className="manif-sous-titre">un cortège ou vingt groupes ?</span>
         </h1>
         <p className="chapeau-simple">
-          Dix mille personnes dans le centre de Paris, ou d&apos;une des huit autres villes
+          Dix mille personnes dans le centre de Paris, ou d&apos;une des quatorze autres villes
           proposées. En un seul cortège, ou en petits groupes qui
           bougent : qu&apos;est-ce que la police a le plus de mal à suivre ? Le modèle des vidéos tourne
           ici, dans votre navigateur. Changez les réglages et regardez ce que ça donne.

@@ -39,5 +39,35 @@
   "nom": "Montpellier",
   "tenus": [["prefecture", "Préfecture", 43.61143, 3.87653], ["palais_de_justice", "Palais de justice", 43.61156, 3.87259]],
   "nasses": [["gare", "Gare Saint-Roch", 43.60566, 3.8802], ["comedie", "Comédie", 43.60869, 3.87992], ["esplanade", "Esplanade", 43.61115, 3.88118]]
+ },
+ "nice": {
+  "nom": "Nice",
+  "tenus": [["prefecture", "Préfecture", 43.69634, 7.27516], ["hotel_de_ville", "Hôtel de ville", 43.69607, 7.2715]],
+  "nasses": [["garibaldi", "Garibaldi", 43.70112, 7.28027], ["massena", "Masséna", 43.69695, 7.27032], ["gare", "Gare Thiers", 43.70483, 7.26166]]
+ },
+ "tours": {
+  "nom": "Tours",
+  "tenus": [["prefecture", "Préfecture", 47.39322, 0.69225], ["hotel_de_ville", "Hôtel de ville", 47.39062, 0.68932]],
+  "nasses": [["anatole_france", "Anatole-France", 47.39674, 0.68622], ["plumereau", "Plumereau", 47.39444, 0.68173], ["victoire", "Victoire", 47.39406, 0.67835]]
+ },
+ "lille": {
+  "nom": "Lille",
+  "tenus": [["prefecture", "Préfecture", 50.63432, 3.06031], ["hotel_de_ville", "Hôtel de ville", 50.6316, 3.0701]],
+  "nasses": [["grand_place", "Grand'Place", 50.63689, 3.06474], ["gare", "Gare Lille-Flandres", 50.63638, 3.07053], ["bettignies", "Louise-de-Bettignies", 50.64084, 3.06475]]
+ },
+ "brest": {
+  "nom": "Brest",
+  "tenus": [["sous_prefecture", "Sous-préfecture", 48.38526, -4.48393], ["tribunal", "Tribunal", 48.38469, -4.48572]],
+  "nasses": [["liberte", "Liberté", 48.39072, -4.48582], ["wilson", "Wilson", 48.38616, -4.48829], ["saint_louis", "Saint-Louis", 48.38931, -4.49033]]
+ },
+ "strasbourg": {
+  "nom": "Strasbourg",
+  "tenus": [["prefecture", "Préfecture", 48.58807, 7.75517], ["hotel_de_ville", "Hôtel de ville", 48.58446, 7.75092]],
+  "nasses": [["kleber", "Kléber", 48.58331, 7.74596], ["gutenberg", "Gutenberg", 48.58119, 7.74854], ["bourse", "Bourse", 48.57609, 7.75348]]
+ },
+ "rennes": {
+  "nom": "Rennes",
+  "tenus": [["hotel_de_ville", "Hôtel de ville", 48.11103, -1.67931], ["parlement", "Parlement", 48.11282, -1.67752]],
+  "nasses": [["republique", "République", 48.10985, -1.6793], ["sainte_anne", "Sainte-Anne", 48.11442, -1.68057], ["charles_de_gaulle", "Charles-de-Gaulle", 48.10591, -1.67643]]
  }
 }

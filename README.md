@@ -3,7 +3,7 @@
 Le code des pages [walidai.fr/simulations](https://walidai.fr/simulations) : des modèles
 simplifiés qui tournent dans le navigateur, avec des réglages à changer.
 
-- **Be water** : un cortège ou vingt groupes dans le centre de Paris ou de huit autres villes.
+- **Be water** : un cortège ou vingt groupes dans le centre de Paris ou de quatorze autres villes.
 - **La convergence** : des portes de Paris vers Châtelet, en petits groupes ou en un cortège.
 
 Ce sont des modèles simplifiés, pas des preuves et pas des modes d'emploi. Aucun contact
