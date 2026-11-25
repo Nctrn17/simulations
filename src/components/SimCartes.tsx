@@ -262,8 +262,9 @@ class Panneau {
 }
 
 const adresseCarte = (d: Definition, r: Reglages) => (d.carte ? d.carte(r) : `${d.base}/carte.json`);
-// « de Paris », « d'Angers »
-const deVille = (nom: string) => (/^[AEIOUYÂÉÈÊÎÔ]/i.test(nom) ? `d'${nom}` : `de ${nom}`);
+// « de Paris », « d'Angers », « du Mans »
+const deVille = (nom: string) =>
+  nom.startsWith("Le ") ? `du ${nom.slice(3)}` : /^[AEIOUYÂÉÈÊÎÔ]/i.test(nom) ? `d'${nom}` : `de ${nom}`;
 
 const mediane = (t: number[]) => {
   const s = t.filter((x) => Number.isFinite(x)).sort((x, y) => x - y);
