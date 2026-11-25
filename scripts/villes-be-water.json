@@ -8,7 +8,7 @@
  "marseille": {
   "nom": "Marseille",
   "tenus": [["prefecture", "Préfecture", 43.29012, 5.37975], ["hotel_de_ville", "Hôtel de ville", 43.29653, 5.36984]],
-  "nasses": [["reformes", "Réformés", 43.29882, 5.38592], ["general_de_gaulle", "Général-de-Gaulle", 43.29504, 5.3756], ["vieux_port", "Vieux-Port", 43.29415, 5.3744]]
+  "nasses": [["reformes", "Réformés", 43.29882, 5.38592], ["marseillaises", "Marseillaises", 43.30155, 5.38088], ["porte_aix", "Porte d'Aix", 43.30185, 5.37475]]
  },
  "nantes": {
   "nom": "Nantes",
