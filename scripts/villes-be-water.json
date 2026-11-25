@@ -69,5 +69,45 @@
   "nom": "Rennes",
   "tenus": [["hotel_de_ville", "Hôtel de ville", 48.11103, -1.67931], ["parlement", "Parlement", 48.11282, -1.67752]],
   "nasses": [["republique", "République", 48.10985, -1.6793], ["sainte_anne", "Sainte-Anne", 48.11442, -1.68057], ["charles_de_gaulle", "Charles-de-Gaulle", 48.10591, -1.67643]]
+ },
+ "rouen": {
+  "nom": "Rouen",
+  "tenus": [["prefecture", "Préfecture", 49.44612, 1.07944], ["hotel_de_ville", "Hôtel de ville", 49.44316, 1.09866]],
+  "nasses": [["clemenceau", "Cours Clemenceau", 49.4344, 1.08924], ["joffre", "Joffre", 49.43516, 1.08621], ["theatre", "Théâtre des Arts", 49.43959, 1.08953]]
+ },
+ "caen": {
+  "nom": "Caen",
+  "tenus": [["prefecture", "Préfecture", 49.17945, -0.36352], ["hotel_de_ville", "Hôtel de ville", 49.18112, -0.37314]],
+  "nasses": [["saint_pierre", "Saint-Pierre", 49.18378, -0.36121], ["courtonne", "Courtonne", 49.18381, -0.35617], ["theatre", "Théâtre", 49.1805, -0.36188]]
+ },
+ "avignon": {
+  "nom": "Avignon",
+  "tenus": [["prefecture", "Préfecture", 43.94758, 4.81919], ["hotel_de_ville", "Hôtel de ville", 43.94928, 4.80526]],
+  "nasses": [["jean_jaures", "Jean-Jaurès", 43.94479, 4.80552], ["pie", "Pie", 43.94818, 4.81043], ["palais", "Palais des Papes", 43.9514, 4.80661]]
+ },
+ "dijon": {
+  "nom": "Dijon",
+  "tenus": [["prefecture", "Préfecture", 47.32465, 5.04159], ["tribunal", "Tribunal", 47.32808, 5.04823]],
+  "nasses": [["darcy", "Darcy", 47.3236, 5.03283], ["liberation", "Libération", 47.32127, 5.04142], ["wilson", "Wilson", 47.31617, 5.04332]]
+ },
+ "poitiers": {
+  "nom": "Poitiers",
+  "tenus": [["prefecture", "Préfecture", 46.58083, 0.335], ["hotel_de_ville", "Hôtel de ville", 46.5803, 0.34014]],
+  "nasses": [["porte_de_paris", "Porte de Paris", 46.59035, 0.34031], ["liberte", "Liberté", 46.58591, 0.34283], ["notre_dame", "Notre-Dame", 46.58438, 0.34396]]
+ },
+ "besancon": {
+  "nom": "Besançon",
+  "tenus": [["prefecture", "Préfecture", 47.23297, 6.02069], ["hotel_de_ville", "Hôtel de ville", 47.23771, 6.02384]],
+  "nasses": [["revolution", "Révolution", 47.24003, 6.02238], ["esplanade", "Droits-de-l'Homme", 47.23601, 6.02217], ["granvelle", "Granvelle", 47.23523, 6.02601]]
+ },
+ "le_mans": {
+  "nom": "Le Mans",
+  "tenus": [["prefecture", "Préfecture", 48.00194, 0.19979], ["hotel_de_ville", "Hôtel de ville", 48.00745, 0.19733]],
+  "nasses": [["eperon", "Éperon", 48.0053, 0.19434], ["republique", "République", 48.00412, 0.19617], ["gare", "Gare", 47.99691, 0.19038]]
+ },
+ "reims": {
+  "nom": "Reims",
+  "tenus": [["sous_prefecture", "Sous-préfecture", 49.25516, 4.03431], ["hotel_de_ville", "Hôtel de ville", 49.25806, 4.03253]],
+  "nasses": [["gare", "Gare", 49.25897, 4.02445], ["erlon", "Erlon", 49.25629, 4.0265], ["republique", "République", 49.26091, 4.03049]]
  }
 }

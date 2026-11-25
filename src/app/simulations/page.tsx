@@ -24,7 +24,7 @@ const SIMULATIONS = [
     titre: "Be water",
     question: "Un cortège ou vingt groupes ?",
     texte:
-      "Dix mille personnes dans le centre de Paris ou de quatorze autres villes. Vous réglez la ville, le nombre de groupes, le nombre de policiers, d'où viennent les renforts.",
+      "Dix mille personnes dans le centre de Paris ou de vingt-deux autres villes. Vous réglez la ville, le nombre de groupes, le nombre de policiers, d'où viennent les renforts.",
   },
   {
     href: "/simulations/convergence",
